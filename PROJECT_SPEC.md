@@ -1,21 +1,48 @@
 # Jev48 project spec
 
-## Objective
+## Question
 
-Measure what an AI coding/research agent can reproduce from Jev within a weekend when it may use any public information and open-source work.
+**How close can ChatGPT get to TypeSafe's Jev in one weekend if it may use everything publicly available?**
 
-## Primary KPI
+This is not a from-scratch reproduction claim.
 
-A clear, defensible direct comparison with Jev that a non-specialist can understand quickly, without sacrificing methodological integrity.
+## Public starting point
 
-## Technical strategy
+After auditing public Jev-like projects, Jev48 pins:
 
-1. Pin the strongest public base found during the audit (`Mapika/decider-2b`).
-2. Add one substantive, measurable change: empirical human-vote distribution supervision.
-3. Keep Jev entirely out of the training/selection loop.
-4. Evaluate on a frozen human-preference test and broad held-out transfer suite.
-5. Publish raw receipts, hashes, costs, elapsed time, and upstream attribution.
+```text
+Mapika/decider
+commit b08acf787d5d1f718a8c36c4677960f43772c7be
+model Mapika/decider-2b
+```
 
-## Success is not defined as “beat Jev”
+## Jev48 modification
 
-Useful outcomes include close reproduction, a clear remaining gap, or evidence that calibration/generalization is the hard part. The launch language is selected after the locked results exist.
+Test whether preference calibration improves when multiple human judgments are preserved as an empirical target distribution rather than reduced to one majority label.
+
+Primary preference source: pinned MT-Bench human judgments over real model responses.
+
+## Evaluation
+
+Two locked axes:
+
+1. **Human preference** — unseen MT-Bench question groups, scored against empirical expert-vote distributions.
+2. **Transfer OOD** — public tasks marked held-out/evaluation-only by the pinned upstream training registry.
+
+Models in final table:
+
+- untouched public `decider-2b` starting point;
+- selected Jev48 reproduction;
+- native Jev, queried only after selection is frozen.
+
+Metrics: accuracy, multiclass Brier, NLL/ECE where meaningful, plus paired bootstrap comparisons.
+
+## Naming
+
+- Experiment: **Jev48**
+- Derivative checkpoint: **`jev48-2b`**, only if a derivative wins selection.
+- If the public base wins, no new model checkpoint is branded as Jev48.
+
+## Integrity
+
+See `INTEGRITY.md` and `BENCHMARK_POLICY.md`.

@@ -1,36 +1,34 @@
-# Modal runbook
-
-The default runner uses one H100 for the model experiments. H100 is chosen for iteration speed/convenience, not because the 2B model fundamentally requires it.
-
-## Setup
-
-```bash
-python -m pip install 'modal>=1.5,<2'
-modal setup
-```
+# Modal runbook — Jev48
 
 ## Core experiment
 
 ```bash
+python -m pip install 'modal>=1.5,<2'
+modal setup
 modal run modal_app.py
 ```
 
-The output includes a run name. Artifacts persist to `jev48-artifacts`.
+The H100 job:
 
-## Live Jev
+1. runs tests + release audit;
+2. builds/fixes hashes for the MT-Bench human-vote and held-out transfer suites;
+3. evaluates untouched `Mapika/decider-2b` on dev;
+4. trains the predefined hard/soft candidates;
+5. selects on dev only;
+6. opens locked calibration/test/OOD only after selection;
+7. fits calibration temperatures on calibration only;
+8. writes all receipts and, if warranted, a `release/model` derivative.
 
-Store the key in Modal, not source/chat:
+Artifacts persist to volume `jev48-artifacts`.
+
+## Live Jev stage
+
+After core selection:
 
 ```bash
-modal secret create jev48-secrets TYPESAFE_API_KEY=YOUR_KEY
-# or: modal secret create jev48-secrets OPENROUTER_API_KEY=YOUR_KEY
-modal run modal_jev.py --run-name RUN_NAME
+modal secret create jev48-secrets TYPESAFE_API_KEY=...
+# or OPENROUTER_API_KEY=...
+modal run modal_jev.py --run-name <RUN_NAME>
 ```
 
-If interrupted, `benchmark_jev.py` resumes row by row from its existing receipt.
-
-## Download
-
-```bash
-modal volume get jev48-artifacts RUN_NAME ./jev48-modal-results
-```
+The final Jev headline row uses native provider probabilities. A separate Jev temperature fit is diagnostic only.

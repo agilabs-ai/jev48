@@ -5,6 +5,11 @@ import argparse
 import json
 from pathlib import Path
 import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from jev48.decider_bridge import DECIDER_COMMIT, DECIDER_MODEL
 from jev48.mtbench import MTBENCH_REVISION

@@ -1,33 +1,30 @@
 # Third-party notices
 
-Jev48's own orchestration/evaluation code is MIT-licensed. It does not vendor the upstream model source in the repository; Modal clones pinned upstream code during image construction.
-
 ## Mapika/decider
 
-Primary public starting point and runtime/training implementation.
+Jev48's default starting model and implementation lineage.
 
-- repository: https://github.com/Mapika/decider
-- pinned commit: `b08acf787d5d1f718a8c36c4677960f43772c7be`
-- weights: `Mapika/decider-2b`
-- upstream license: Apache-2.0
+```text
+repo:   https://github.com/Mapika/decider
+commit: b08acf787d5d1f718a8c36c4677960f43772c7be
+model:  Mapika/decider-2b
+license: Apache-2.0
+```
 
-Any redistributed derivative model weights/code must preserve the obligations of the upstream license and of the Qwen base model used by decider.
+Jev48 does not claim the upstream architecture, base training corpus, inference engine, or initial weights as original work.
 
-## MT-Bench human judgments
+## Qwen
 
-- dataset: `lmsys/mt_bench_human_judgments`
-- pinned revision: `ee34b9d273a7a35e4415c87678526c56c471098c`
-- dataset card/license must be reviewed again before redistributing transformed rows publicly.
+`decider-2b` is built on the Qwen model family. Preserve the applicable upstream model license/attribution.
 
-Jev48 records provenance and can publish generation scripts/manifests instead of source text if redistribution terms require it.
+## MT-Bench / LMSYS
 
-## Other datasets
-
-The transfer/replay suites are generated from public datasets referenced by `Mapika/decider`. Each source retains its own license. Before publishing transformed raw text, run the release audit and either:
-
-1. redistribute only sources whose terms permit it; or
-2. publish deterministic builder scripts + IDs/hashes instead of the text.
+Human judgment data is used for the controlled hard-vs-soft preference experiment. Preserve source license/citation and pinned revision in public data manifests.
 
 ## TypeSafe Jev
 
-“Jev” and “System One” are used descriptively for comparison. Jev48 is not affiliated with TypeSafe. TypeSafe API outputs should be redistributed only to the extent permitted by applicable terms; otherwise publish aggregate metrics and cryptographic receipts/IDs rather than prohibited raw content.
+“Jev” is used descriptively as the closed target/reference system. Jev48 is independent and not affiliated with TypeSafe.
+
+## Other public prior art
+
+The research process also inspected public work including `jaredpalmer/kev`, `TianyuCodings/NanoJev`, `TheoLeeCJ/SemIf`, `razorback16/openjev`, and `daseinlabs/open-jev`. See `RELATED_WORK.md`.

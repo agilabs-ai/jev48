@@ -245,12 +245,13 @@ def experiment() -> dict:
         cfg = json.loads(cfg_path.read_text(encoding="utf-8")) if cfg_path.exists() else {}
         cfg.update({
             "temperature": float(calibrated_summary["temperature"]),
-            "version": "jev48",
+            "version": "jev48-2b",
             "jev48_benchmark_sha256": calibrated_summary["benchmark_sha256"],
             "jev48_temperature_fit_split": calibrated_summary["fit_split"],
         })
         cfg_path.write_text(json.dumps(cfg, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (release / "MODEL_SOURCE.json").write_text(json.dumps({
+        "release_model_name": "jev48-2b" if winner_model != DECIDER_MODEL else None,
         "selected_name": selection["winner"]["name"],
         "selected_model": winner_model,
         "base_model": DECIDER_MODEL,

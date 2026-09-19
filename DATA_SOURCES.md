@@ -1,25 +1,23 @@
-# Data sources
+# Jev48 data sources
 
-## Human preference
+## Training / preference ablation
 
-`lmsys/mt_bench_human_judgments`
+### MT-Bench human judgments
 
-Pinned revision:
+Pinned public source used to aggregate expert A/B/tie votes over real model responses. Question IDs are split before outcomes are inspected so all votes for one question stay in one partition.
 
-```text
-ee34b9d273a7a35e4415c87678526c56c471098c
-```
+The decision model sees anonymized response content; model identity remains metadata.
 
-Used because it contains multiple expert judgments over real model conversations. Model identities are stored as provenance but removed from model input.
+## Replay / regression
 
-## Transfer, regression, replay
+Public tasks from the pinned `Mapika/decider` data registry are used to reduce catastrophic forgetting during the short preference fine-tune.
 
-Loaded via the task registry of pinned `Mapika/decider` commit:
+## Transfer OOD
 
-```text
-b08acf787d5d1f718a8c36c4677960f43772c7be
-```
+The frozen transfer suite is built only from tasks marked held-out/evaluation-only in the pinned upstream registry. Candidate order is randomized deterministically and outcome-blind.
 
-Exact task lists are frozen in `jev48/decider_bridge.py`.
+## Jev
 
-Transfer tasks are explicitly marked held-out/evaluation-only upstream. Regression/replay tasks are separate in-task eval/train partitions used only to guard against catastrophic fine-tuning regression.
+Jev outputs are evaluation-only. They never enter training, replay, candidate selection, or temperature fitting for Jev48.
+
+At publication time preserve all upstream dataset/model licenses and citations. When redistribution is uncertain, publish builders, source identifiers, revisions, and hashes rather than republishing source text.

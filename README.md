@@ -8,6 +8,13 @@ This repository is an auditable experiment. ChatGPT was given the goal, public i
 
 > Given 48 hours and everything public on the internet, how much of Jev can an AI agent reproduce?
 
+## Naming
+
+- Experiment/repository: **Jev48** / `jev48`
+- Derivative checkpoint, **only if a fine-tuned candidate wins selection**: **`jev48-2b`**
+- If the untouched public base wins, Jev48 remains an experiment/result and no upstream checkpoint is rebranded as ours.
+- Jev48 is independent and not affiliated with TypeSafe.
+
 ## Status
 
 **Experiment staged; final locked numbers are not published yet.**
