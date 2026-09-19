@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "calibration": 200,
+    "dev": 200,
+    "ood": 500,
+    "test": 300,
+    "train": 1300
+  },
+  "note": "Known-probability simulator data. OOD is an entirely held-out equipment-failure domain.",
+  "ood_count": 500,
+  "seed": 17,
+  "seen_per_domain": 500
+}

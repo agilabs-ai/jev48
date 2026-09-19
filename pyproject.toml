@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "open-system-one"
+version = "0.1.0"
+description = "Open calibrated dynamic decision models: state + candidates in, probability distributions out."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "pydantic>=2.10",
+  "pyyaml>=6.0",
+  "torch>=2.4",
+  "safetensors>=0.5",
+  "httpx>=0.28",
+]
+
+[project.optional-dependencies]
+train = [
+  "transformers>=4.55",
+  "accelerate>=1.0",
+  "peft>=0.17",
+  "sentencepiece>=0.2",
+]
+serve = ["fastapi>=0.115", "uvicorn>=0.34"]
+teachers = ["openai>=2.0", "anthropic>=0.60"]
+dev = ["pytest>=8.0", "scikit-learn>=1.6"]
+all = [
+  "transformers>=4.55", "accelerate>=1.0", "peft>=0.17", "sentencepiece>=0.2",
+  "fastapi>=0.115", "uvicorn>=0.34", "openai>=2.0", "anthropic>=0.60",
+  "pytest>=8.0", "scikit-learn>=1.6"
+]
+
+[tool.setuptools.packages.find]
+include = ["open_system_one*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

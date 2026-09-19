@@ -1,0 +1,204 @@
+{
+  "dev": {
+    "accuracy": 0.725,
+    "brier": 0.12446198640807613,
+    "ece_15": 0.03583527271016285,
+    "n": 200,
+    "nll": 0.7213274186180354,
+    "risk_coverage": [
+      {
+        "coverage": 1.0,
+        "error_rate": 0.3671513092883088,
+        "n": 200,
+        "threshold": 0.5
+      },
+      {
+        "coverage": 0.395,
+        "error_rate": 0.2534948110620127,
+        "n": 79,
+        "threshold": 0.7
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.8
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.9
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.95
+      }
+    ],
+    "total_variation": 0.21130663110266076
+  },
+  "ood": {
+    "accuracy": 0.542,
+    "brier": 0.19597738814624338,
+    "ece_15": 0.029110127997815316,
+    "n": 500,
+    "nll": 0.6931471805599454,
+    "risk_coverage": [
+      {
+        "coverage": 1.0,
+        "error_rate": 0.47088987200218474,
+        "n": 500,
+        "threshold": 0.5
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.7
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.8
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.9
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.95
+      }
+    ],
+    "total_variation": 0.2801526238763156
+  },
+  "purpose": "CPU pipeline smoke test only; not a Jev-quality baseline",
+  "test": {
+    "accuracy": 0.76,
+    "brier": 0.11013038954337175,
+    "ece_15": 0.02838298106486143,
+    "n": 300,
+    "nll": 0.7111315655917516,
+    "risk_coverage": [
+      {
+        "coverage": 1.0,
+        "error_rate": 0.3527386951388865,
+        "n": 300,
+        "threshold": 0.5
+      },
+      {
+        "coverage": 0.4033333333333333,
+        "error_rate": 0.27558926255345223,
+        "n": 121,
+        "threshold": 0.7
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.8
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.9
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.95
+      }
+    ],
+    "total_variation": 0.20293802250580342
+  },
+  "train_examples": 1300,
+  "uniform_ood": {
+    "accuracy": 0.542,
+    "brier": 0.19597738814624338,
+    "ece_15": 0.029110127997815316,
+    "n": 500,
+    "nll": 0.6931471805599454,
+    "risk_coverage": [
+      {
+        "coverage": 1.0,
+        "error_rate": 0.47088987200218474,
+        "n": 500,
+        "threshold": 0.5
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.7
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.8
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.9
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.95
+      }
+    ],
+    "total_variation": 0.2801526238763156
+  },
+  "uniform_test": {
+    "accuracy": 0.3933333333333333,
+    "brier": 0.1822356277342508,
+    "ece_15": 0.035209717907434754,
+    "n": 300,
+    "nll": 0.7945134575869864,
+    "risk_coverage": [
+      {
+        "coverage": 0.75,
+        "error_rate": 0.5294619441314229,
+        "n": 225,
+        "threshold": 0.5
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.7
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.8
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.9
+      },
+      {
+        "coverage": 0.0,
+        "error_rate": null,
+        "n": 0,
+        "threshold": 0.95
+      }
+    ],
+    "total_variation": 0.2749330936917738
+  }
+}
