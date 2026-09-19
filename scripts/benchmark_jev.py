@@ -5,9 +5,9 @@ import argparse
 import json
 from pathlib import Path
 
-from open_system_one.io import dump_json, file_sha256, read_jsonl
-from open_system_one.jev import JevClient
-from open_system_one.metrics import summarize
+from openjev.io import dump_json, file_sha256, read_jsonl
+from openjev.jev import JevClient
+from openjev.metrics import summarize
 
 
 def main():

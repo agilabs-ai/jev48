@@ -17,7 +17,7 @@ def metric(summary: dict, slice_name: str | None, key: str):
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Apply predeclared marketing gates to Open System One vs NanoJev.")
+    p = argparse.ArgumentParser(description="Apply predeclared marketing gates to OpenJev vs NanoJev.")
     p.add_argument("--ours", required=True)
     p.add_argument("--nanojev", required=True)
     p.add_argument("--output", default="results/launch_gate.json")

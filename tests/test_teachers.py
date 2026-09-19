@@ -1,5 +1,5 @@
-from open_system_one.schema import Candidate,DecisionExample
-from open_system_one.teachers import TeacherJudgment,ensemble_judgments
+from openjev.schema import Candidate,DecisionExample
+from openjev.teachers import TeacherJudgment,ensemble_judgments
 
 
 class FakeTeacher:

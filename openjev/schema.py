@@ -123,7 +123,7 @@ class ChoiceAnswer(BaseModel):
 
 
 class SystemOneResponse(BaseModel):
-    model: str = "open-system-one"
+    model: str = "openjev"
     answers: dict[str, ChoiceAnswer]
     usage: dict[str, int | float]
     metadata: dict[str, Any] = Field(default_factory=dict)

@@ -1,7 +1,7 @@
 import pytest
 
-from open_system_one.schema import Candidate, DecisionExample
-from open_system_one.formatting import paths_for_example
+from openjev.schema import Candidate, DecisionExample
+from openjev.formatting import paths_for_example
 
 
 def make():

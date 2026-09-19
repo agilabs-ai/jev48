@@ -10,11 +10,11 @@ import time
 import torch
 import yaml
 
-from open_system_one.batching import collate_examples
-from open_system_one.calibration import TemperatureScaler
-from open_system_one.evaluation import predict_examples
-from open_system_one.io import dump_json, read_jsonl
-from open_system_one.model import DynamicDecisionModel, load_hf_backbone, save_head_checkpoint, soft_target_loss
+from openjev.batching import collate_examples
+from openjev.calibration import TemperatureScaler
+from openjev.evaluation import predict_examples
+from openjev.io import dump_json, read_jsonl
+from openjev.model import DynamicDecisionModel, load_hf_backbone, save_head_checkpoint, soft_target_loss
 
 
 def resolve_device(value: str) -> str:
@@ -79,7 +79,7 @@ def main():
     optimizer=torch.optim.AdamW(trainable,lr=float(cfg.get("lr",1e-4)),weight_decay=float(cfg.get("weight_decay",0.01)))
 
     metadata={
-        "format_version":"open-system-one-lora-v1","base_model":cfg["base_model"],"revision":cfg.get("revision"),
+        "format_version":"openjev-lora-v1","base_model":cfg["base_model"],"revision":cfg.get("revision"),
         "train_mode":"lora","adapter_path":"adapter","set_attention":bool(cfg.get("set_attention",True)),
         "set_dim":int(cfg.get("set_dim",128)),"max_length":max_length,"inference_dtype":dtype,"temperature":1.0,
         "prefix_sharing":False,"zero_output_decoding":True,"seed":seed,"lora_r":int(cfg.get("lora_r",8)),

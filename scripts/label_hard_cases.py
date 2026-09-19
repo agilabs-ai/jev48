@@ -5,8 +5,8 @@ import argparse
 import json
 from pathlib import Path
 
-from open_system_one.schema import DecisionExample
-from open_system_one.teachers import AnthropicTeacher, OpenAITeacher, ensemble_judgments
+from openjev.schema import DecisionExample
+from openjev.teachers import AnthropicTeacher, OpenAITeacher, ensemble_judgments
 
 
 def main():

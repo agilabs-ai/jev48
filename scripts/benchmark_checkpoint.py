@@ -6,14 +6,14 @@ import json
 from pathlib import Path
 import time
 
-from open_system_one.evaluation import predict_examples
-from open_system_one.io import dump_json, file_sha256, read_jsonl
-from open_system_one.reporting import sliced_summary
-from open_system_one.serving import load_engine
+from openjev.evaluation import predict_examples
+from openjev.io import dump_json, file_sha256, read_jsonl
+from openjev.reporting import sliced_summary
+from openjev.serving import load_engine
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Benchmark an Open System One checkpoint on frozen decision rows.")
+    p = argparse.ArgumentParser(description="Benchmark an OpenJev checkpoint on frozen decision rows.")
     p.add_argument("--checkpoint", required=True)
     p.add_argument("--data", required=True)
     p.add_argument("--output", default="results/checkpoint_predictions.jsonl")
@@ -45,7 +45,7 @@ def main() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records), encoding="utf-8")
     summary = {
-        "model": f"Open System One ({Path(args.checkpoint).name})",
+        "model": f"OpenJev ({Path(args.checkpoint).name})",
         "benchmark_sha256": file_sha256(data),
         "metrics": sliced_summary(probs, targets, examples)["overall"],
         "slices": sliced_summary(probs, targets, examples),

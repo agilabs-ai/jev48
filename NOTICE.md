@@ -1,10 +1,18 @@
-# Prior art / references
+# Attribution and scope
 
-This is an independent implementation. It is not affiliated with TypeSafe and does not claim to reproduce TypeSafe's proprietary Jev architecture or training method.
+OpenJev v0 is an explicit derivative experiment based on the public **NanoJev** project and checkpoint.
 
-Public projects that informed the design and benchmark plan:
+Primary upstream:
 
-- **NanoJev** — TianyuCodings/NanoJev (MIT). Demonstrates a Qwen3-0.6B backbone with dynamic decision heads, complete probability distributions, and zero output-token decoding.
-- **open-jev** — daseinlabs/open-jev. Demonstrates one-pass / cached option-likelihood scoring with Gemma on Apple Silicon and is used as conceptual baseline prior art.
+- NanoJev: `https://github.com/TianyuCodings/NanoJev`
+- pinned source revision: `71a513bb0163b5634467842b523ee0c0ed6fb1c7`
+- public model: `C-Tianyu/NanoJev`
+- upstream license: MIT
 
-The code in this repository is written independently around the project goals in `PROJECT_SPEC.md`.
+OpenJev adds a broader semantic/calibration training distribution, benchmark tooling, OOD evaluation, and experiment orchestration around that public baseline.
+
+OpenJev is not affiliated with TypeSafe and does not claim to reproduce TypeSafe's proprietary Jev architecture, training data, or RLCD implementation.
+
+Other prior art retained as reference:
+
+- `daseinlabs/open-jev` for option-likelihood / prefix-scoring ideas.

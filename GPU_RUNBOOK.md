@@ -1,89 +1,52 @@
-# First GPU Runbook
+# OpenJev GPU runbook
 
-## Hardware
+## Default
 
-Recommended first run:
-
-- NVIDIA GPU with **24 GB VRAM** or more
-- CUDA-capable PyTorch environment
-- no H100 required
-
-The v0 run freezes the 0.6B backbone and trains only the dynamic decision head.
-
-## Setup
+Use the Modal job:
 
 ```bash
-git clone <repo>
-cd open-system-one
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install -e '.[train,dev]'
+modal run modal_app.py
 ```
 
-## Sanity checks
+It uses an A100 for convenience and reproducibility. **An H100 is not required.**
 
-```bash
-make test
-make data
-PYTHONPATH=. python scripts/validate_dataset.py data/simulator
-```
+## What is trained
 
-## Fast decision gate
+OpenJev v0 does not initialize a new model from Qwen.
 
-```bash
-PYTHONPATH=. python scripts/train.py --config configs/train_head_fast.yaml
-```
-
-Inspect:
+It loads the public NanoJev checkpoint and performs a short full-model fine-tune using NanoJev's own training implementation:
 
 ```text
-checkpoints/head-fast/summary.json
+NanoJev checkpoint
+  + semantic public labels
+  + simulator probability distributions
+  + Brier objective
+  → OpenJev
 ```
 
-Do not scale if:
-
-- dev NLL does not improve during training
-- Brier remains near the uniform baseline
-- outputs are unstable under candidate reordering
-
-## Main head run
-
-```bash
-PYTHONPATH=. python scripts/train.py --config configs/train_head.yaml
-```
-
-## Semantic smoke baseline
-
-```bash
-PYTHONPATH=. python scripts/benchmark_option_likelihood.py \
-  --model Qwen/Qwen3-0.6B-Base \
-  --data data/benchmark/semantic_smoke.jsonl
-```
-
-The current option-likelihood implementation is intentionally naive and does not reuse KV prefixes. Use it for quality, not final latency comparison.
-
-## Jev
-
-Only after the benchmark is frozen:
-
-```bash
-export TYPESAFE_API_KEY=...
-PYTHONPATH=. python scripts/benchmark_jev.py \
-  --data data/benchmark/semantic_smoke.jsonl
-```
-
-## What to send back for the next iteration
-
-The most useful artifacts are:
+Default training parameters:
 
 ```text
-checkpoints/head-fast/summary.json
-checkpoints/head-fast/train_log.json
-checkpoints/head-fast/test_predictions.jsonl
-checkpoints/head-fast/ood_predictions.jsonl
-results/option_likelihood.summary.json
-results/jev_predictions.summary.json   # if available
+steps: 150
+batch_questions: 1
+microbatch_questions: 1
+max_length: 512
+backbone_lr: 2e-5
+head_lr: 2e-4
+gradient_checkpointing: true
+precision: bf16
 ```
 
-With those outputs, the next decision is evidence-driven: fix data/head, add semantic datasets, or move to LoRA/larger backbone.
+## Why A100 if H100 is unnecessary?
+
+Only to reduce operational risk for the first run. The model is ~0.6B; after a successful run, reducing hardware cost is an optimization rather than a research question.
+
+## Required outputs
+
+```text
+results/nanojev_open_decision.summary.json
+results/openjev_open_decision.summary.json
+results/openjev_vs_nanojev.md
+results/openjev_gate.json
+checkpoints/openjev/
+```

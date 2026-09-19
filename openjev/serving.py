@@ -59,7 +59,7 @@ class LoadedEngine:
             answers[qid]=ChoiceAnswer(choice=pred.best,probabilities=pred.probabilities,confidence=confidence)
             total_paths+=len(pred.probabilities)
         return SystemOneResponse(
-            model="open-system-one",
+            model="openjev",
             answers=answers,
             usage={"output_tokens":0,"candidate_paths":total_paths,"questions":len(qids)},
             metadata={"prefix_sharing":False,"temperature":self.temperature,"confidence_semantics":"max calibrated choice probability"},

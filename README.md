@@ -1,9 +1,41 @@
+# OpenJev
 
-## Current de-risk path
+**A small, open Jev-style decision model built by extending NanoJev rather than rebuilding it.**
 
-NanoJev is a **mandatory baseline**. The independent v0 was not forked from NanoJev; its public source/model were inspected and adapted only for comparison.
+OpenJev starts from the public **NanoJev** checkpoint and training code, then adds a broader semantic training distribution, simulator-grounded probability supervision, and a frozen multi-domain benchmark.
 
-Run the first real experiment with:
+The weekend question is deliberately narrow:
+
+> Can a very small amount of additional training turn NanoJev from a strong game/navigation reproduction into a more general semantic decision model — without changing the core 0.6B architecture?
+
+OpenJev is **not affiliated with TypeSafe** and does not claim to reproduce Jev's proprietary architecture or RLCD method.
+
+## What changed vs NanoJev
+
+The first OpenJev experiment changes as little as possible:
+
+```text
+NanoJev public checkpoint
+        │
+        ├── same Qwen3-0.6B backbone
+        ├── same dynamic decision architecture
+        ├── same 2–255 candidate interface
+        ├── same zero output-token decoding
+        │
+        ▼
++ semantic decision data
++ known-probability simulator data
++ Brier/proper-distribution fine-tuning
+        │
+        ▼
+      OpenJev
+```
+
+No new architecture is required for v0. The point is to isolate whether **training distribution + calibration supervision** are enough to create a meaningfully broader model.
+
+## Default experiment
+
+Run one command on Modal:
 
 ```bash
 python -m pip install 'modal>=1.1,<2'
@@ -11,180 +43,75 @@ modal setup
 modal run modal_app.py
 ```
 
-Round 1 uses public labels and requires **no paid model APIs**. It benchmarks head-only Open System One vs untuned Qwen vs NanoJev, then automatically runs LoRA only if the head-only model misses the predeclared launch gate. See `RUN_NOW.md`, `MODAL_RUNBOOK.md`, `MARKETING_GATES.md`, and `NANOJEV_BASELINE.md`.
+The default run:
 
-If both independent variants lose, `modal run modal_app.py::nanojev_plus_gpu` is the explicitly derivative Plan-B branch.
-# Open System One
+1. builds public semantic train/test data;
+2. mixes it with known-probability simulator data;
+3. freezes and hashes `OpenDecisionBench`;
+4. downloads the pinned NanoJev source + public checkpoint;
+5. benchmarks **base NanoJev** before training;
+6. validates our data using NanoJev's own schema validator;
+7. fine-tunes the NanoJev checkpoint for a small number of steps;
+8. benchmarks **OpenJev** on the exact same frozen rows;
+9. applies predeclared launch gates;
+10. persists the checkpoint + raw results.
 
-**State + decision candidates in. Full probability distributions out. Zero output-token decoding.**
+Round 1 uses **no paid OpenAI/Anthropic APIs**.
 
-This repository is a weekend research build to test how much of the useful **Jev / System One** primitive can be reproduced with a small open model, transparent training data, proper scoring rules, and very little compute.
+See [`RUN_NOW.md`](RUN_NOW.md).
 
-It is **not** affiliated with TypeSafe and does not claim to reproduce Jev's private architecture or RLCD recipe.
+## Training/evaluation data
 
-## The experiment
+Seen training domains include:
 
-We want to answer one question:
+- Banking77-style intent/routing decisions
+- BoolQ-style binary semantic decisions
+- controlled known-probability simulator tasks
 
-> Can a small open backbone become a fast, calibrated, dynamic decision model that generalizes beyond its training templates?
+OOD benchmark domains include completely held-out public domains such as:
 
-The v0 architecture is deliberately simple:
+- DBpedia14
+- AG News
+
+Candidate order is deterministically shuffled in the frozen benchmark so neither model can benefit from stable label positions.
+
+## What counts as a win
+
+We do not need OpenJev to beat NanoJev on NanoJev's own maze benchmark.
+
+The predeclared main gate is broader semantic decision quality:
+
+- lower Brier with accuracy within 2 percentage points of NanoJev, **or**
+- at least +5 percentage points of accuracy without a large calibration regression.
+
+OOD is reported separately.
+
+See [`MARKETING_GATES.md`](MARKETING_GATES.md).
+
+## Attribution
+
+OpenJev v0 is explicitly **derived from NanoJev**:
+
+- source baseline: `TianyuCodings/NanoJev`
+- public checkpoint: `C-Tianyu/NanoJev`
+- pinned source revision: `71a513bb0163b5634467842b523ee0c0ed6fb1c7`
+
+NanoJev is MIT licensed. See [`NOTICE.md`](NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+## Repo layout
 
 ```text
-state + question + candidate A ─┐
-state + question + candidate B ─┼─ one batched backbone forward ─ dynamic set head ─ softmax
-state + question + candidate C ─┘
+openjev/
+├── openjev/                 # benchmark/data/calibration support library
+├── scripts/                 # data, benchmark, adapters, ablations
+├── tests/                   # local verification
+├── data/                    # small local smoke/simulator fixtures
+├── experiments/             # independent-from-scratch ablation retained for history
+├── modal_app.py             # default OpenJev training + NanoJev comparison
+├── PROJECT_SPEC.md
+├── RUN_NOW.md
+├── MARKETING_GATES.md
+└── NOTICE.md
 ```
 
-Important honesty point: **v0 batches complete candidate paths. It does not yet share the state/question prefix inside the trained path.** It has zero autoregressive decoding, but prefix-sharing is a separate systems optimization and is benchmarked separately.
-
-## What already works
-
-The repo currently contains:
-
-- a validated decision-example schema
-- variable 2–255 candidate support in the schema
-- a permutation-equivariant dynamic decision head
-- soft-target cross entropy + categorical Brier training
-- post-hoc temperature calibration
-- Brier / NLL / ECE / TV / risk-coverage metrics
-- known-probability simulators
-- a fully held-out simulator OOD domain
-- split/family/content leakage validation
-- candidate-order permutation augmentation
-- hard-case mining
-- OpenAI + Anthropic teacher-ensemble plumbing
-- raw Jev benchmark adapter
-- generative option-likelihood baseline
-- FastAPI serving path
-- a frozen semantic smoke benchmark
-- CPU-only end-to-end training validation
-- unit tests that run without model downloads
-
-See [`STATUS.md`](STATUS.md) for exactly what has and has not been executed, and [`CHATGPT_BUILD_LOG.md`](CHATGPT_BUILD_LOG.md) for the auditable in-chat build record.
-
-## Local smoke test
-
-No GPU, model download, or API key required:
-
-```bash
-make test
-make smoke
-PYTHONPATH=. python scripts/train_tiny_cpu.py --steps 150
-```
-
-The CPU model is deliberately tiny and is **not** a Jev competitor. It exists to prove that the data → dynamic head → proper loss → calibration → evaluation path runs end-to-end before spending money.
-
-## First real model run
-
-Install training dependencies:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e '.[train,dev]'
-```
-
-Generate / validate data:
-
-```bash
-make data
-PYTHONPATH=. python scripts/validate_dataset.py data/simulator
-```
-
-Train only the decision head over Qwen3-0.6B:
-
-```bash
-PYTHONPATH=. python scripts/train.py --config configs/train_head_fast.yaml
-```
-
-If the fast run beats the untuned baseline on Brier + NLL, run:
-
-```bash
-PYTHONPATH=. python scripts/train.py --config configs/train_head.yaml
-```
-
-**Do not jump to LoRA/full fine-tuning until that gate passes.**
-
-## Baselines
-
-### Untuned option likelihood
-
-```bash
-PYTHONPATH=. python scripts/benchmark_option_likelihood.py \
-  --model Qwen/Qwen3-0.6B-Base \
-  --data data/benchmark/semantic_smoke.jsonl
-```
-
-This implementation intentionally re-encodes prefixes and is a correctness baseline. An optimized prefix-cache implementation is the next systems baseline.
-
-### Jev
-
-Requires `TYPESAFE_API_KEY`:
-
-```bash
-PYTHONPATH=. python scripts/benchmark_jev.py \
-  --data data/benchmark/semantic_smoke.jsonl
-```
-
-Freeze benchmark files **before** querying Jev:
-
-```bash
-PYTHONPATH=. python scripts/freeze_benchmark.py data/benchmark/semantic_smoke.jsonl
-```
-
-## Premium teacher labeling
-
-Mine hard examples after a student run:
-
-```bash
-PYTHONPATH=. python scripts/mine_hard_cases.py \
-  --predictions checkpoints/head-v0/test_predictions.jsonl \
-  --source-data data/simulator/test.jsonl \
-  --top 1000
-```
-
-Then label only those hard cases, for example:
-
-```bash
-OPENAI_API_KEY=... PYTHONPATH=. python scripts/label_hard_cases.py \
-  --input data/hard_cases.jsonl \
-  --openai-model gpt-6-astra \
-  --samples-each 2
-```
-
-The point is to use frontier intelligence as a **scalpel**, not as the dataset factory.
-
-## Main metrics
-
-We report at minimum:
-
-- accuracy / optimal-action agreement
-- Brier score
-- negative log likelihood
-- ECE
-- total variation to known target distributions
-- risk vs. coverage
-- latency vs. candidate count
-- latency vs. state length
-
-For soft simulator targets, calibration/error metrics use the **target probability of the model's chosen class**, not a fake binary argmax label.
-
-## What would count as a win?
-
-A useful weekend result does **not** require beating Jev everywhere.
-
-Strong outcomes include:
-
-1. a 600M open model matches Jev on several narrow domains;
-2. a tiny specialized model gets most of the useful decision behavior for <$300;
-3. simple option likelihood already captures most of the benefit;
-4. Jev clearly wins on OOD generalization, revealing where the actual secret sauce begins.
-
-All four are informative.
-
-## Why the repo starts with a project spec
-
-The project intentionally preserves [`PROJECT_SPEC.md`](PROJECT_SPEC.md) as an artifact of the build process. The experiment is partly meta: how much of an OSS Jev-style replication can be built by ChatGPT in one weekend, including the methodology, code, data pipeline, evaluation harness, and debugging loop?
-
-The benchmark matters more than the story. A sample multi-question request is in [`examples/systemone_request.json`](examples/systemone_request.json).
+The independent ChatGPT-built decision model is retained as an **ablation**, not the headline model. That work was useful for building the benchmark and understanding the problem, but the default project now optimizes for the actual weekend objective: **improve the strongest existing open baseline with the smallest credible change.**

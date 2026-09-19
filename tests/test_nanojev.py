@@ -1,5 +1,5 @@
-from open_system_one.nanojev import build_nanojev_request, parse_nanojev_response
-from open_system_one.schema import Candidate, DecisionExample
+from openjev.nanojev import build_nanojev_request, parse_nanojev_response
+from openjev.schema import Candidate, DecisionExample
 
 
 def example():

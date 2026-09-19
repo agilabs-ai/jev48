@@ -4,8 +4,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from open_system_one.io import write_jsonl
-from open_system_one.schema import Candidate, DecisionExample
+from openjev.io import write_jsonl
+from openjev.schema import Candidate, DecisionExample
 
 
 def one_hot(k: int, idx: int) -> list[float]:

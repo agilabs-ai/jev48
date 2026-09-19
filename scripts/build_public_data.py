@@ -10,8 +10,8 @@ from pathlib import Path
 
 import httpx
 
-from open_system_one.io import dump_json
-from open_system_one.schema import Candidate, DecisionExample
+from openjev.io import dump_json
+from openjev.schema import Candidate, DecisionExample
 
 
 BANKING_LABELS = [

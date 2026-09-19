@@ -1,6 +1,6 @@
 from collections import Counter
 
-from open_system_one.simulators import generate_dataset
+from openjev.simulators import generate_dataset
 
 
 def test_simulator_splits_and_probs():

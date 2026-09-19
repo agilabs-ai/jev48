@@ -1,5 +1,5 @@
-from open_system_one.reporting import sliced_summary
-from open_system_one.schema import Candidate, DecisionExample
+from openjev.reporting import sliced_summary
+from openjev.schema import Candidate, DecisionExample
 
 
 def ex(i, split, domain, target, k=2):

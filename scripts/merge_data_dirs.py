@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse
 from pathlib import Path
-from open_system_one.io import read_jsonl
+from openjev.io import read_jsonl
 
 
 def main():

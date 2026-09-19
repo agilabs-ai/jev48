@@ -1,6 +1,6 @@
 import torch
 
-from open_system_one.calibration import TemperatureScaler
+from openjev.calibration import TemperatureScaler
 
 
 def ce(logits,targets,t):

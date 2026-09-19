@@ -5,13 +5,13 @@ import argparse
 import random
 import torch
 
-from open_system_one.schema import DecisionRequest
-from open_system_one.serving import load_engine
+from openjev.schema import DecisionRequest
+from openjev.serving import load_engine
 
 
 def main():
     p=argparse.ArgumentParser(); p.add_argument("--checkpoint",required=True); p.add_argument("--data",required=True); p.add_argument("--limit",type=int,default=100); args=p.parse_args()
-    from open_system_one.io import read_jsonl
+    from openjev.io import read_jsonl
     engine=load_engine(args.checkpoint)
     rows=read_jsonl(args.data)[:args.limit]
     rng=random.Random(17); max_delta=0.0

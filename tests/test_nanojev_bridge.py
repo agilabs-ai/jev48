@@ -1,7 +1,7 @@
 import importlib.util
 from pathlib import Path
 
-from open_system_one.schema import Candidate, DecisionExample
+from openjev.schema import Candidate, DecisionExample
 
 
 spec=importlib.util.spec_from_file_location("bridge", Path(__file__).parents[1]/"scripts"/"export_nanojev_training_data.py")

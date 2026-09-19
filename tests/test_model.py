@@ -2,7 +2,7 @@ from types import SimpleNamespace
 import torch
 from torch import nn
 
-from open_system_one.model import DynamicDecisionModel,soft_target_loss
+from openjev.model import DynamicDecisionModel,soft_target_loss
 
 
 class FakeBackbone(nn.Module):

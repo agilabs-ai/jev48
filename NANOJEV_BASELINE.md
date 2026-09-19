@@ -1,75 +1,34 @@
 # NanoJev baseline
 
-NanoJev is a required baseline, not an optional reference.
+NanoJev is both the **upstream initialization** and the mandatory baseline for OpenJev.
 
-Current public NanoJev facts used by this project:
+Pinned upstream:
 
-- source: `TianyuCodings/NanoJev`
-- public model: `C-Tianyu/NanoJev`
-- backbone: `Qwen/Qwen3-0.6B`
-- dynamic choice: 2–255 candidates
+```text
+source: TianyuCodings/NanoJev
+commit: 71a513bb0163b5634467842b523ee0c0ed6fb1c7
+model:  C-Tianyu/NanoJev
+```
+
+OpenJev v0 intentionally keeps NanoJev's architecture and modifies primarily the training distribution.
+
+## Why
+
+NanoJev already provides the hard plumbing:
+
+- Qwen3-0.6B backbone
+- dynamic 2–255 candidate choices
+- decision heads
+- complete distributions
 - zero output-token decoding
-- root checkpoint is the earlier navigation release
-- public code reports complete candidate paths batched in one backbone call and **no prefix sharing**
+- proper-scoring experiments
 
-## Why we did not fork it
+Reimplementing those components again does not improve the weekend marketing or research result.
 
-Open System One was built independently around:
+The interesting experiment is whether a **small amount of additional semantic + calibrated training** broadens the model.
 
-- a simpler reusable library layout
-- semantic decision benchmarks
-- simulator-grounded probability targets
-- explicit OOD testing
-- calibration utilities
-- hard-case teacher distillation hooks
+## Fair comparison
 
-NanoJev's implementation and published methodology were inspected as a research/reference baseline. We should credit it clearly.
+Both base NanoJev and OpenJev are evaluated on the exact same frozen benchmark rows and candidate order.
 
-If later experiments show the fastest route to a better model is to initialize from NanoJev's public stage-1 or final checkpoint, that becomes a **new experimental branch** and must be labeled as such. Do not blur it with the independent v0.
-
-## Run NanoJev on our benchmark
-
-Clone the pinned source revision:
-
-```bash
-git clone https://github.com/TianyuCodings/NanoJev.git vendor/NanoJev
-cd vendor/NanoJev
-git checkout 71a513bb0163b5634467842b523ee0c0ed6fb1c7
-cd ../..
-```
-
-Download its public root checkpoint:
-
-```python
-from huggingface_hub import snapshot_download
-
-snapshot_download(
-    repo_id="C-Tianyu/NanoJev",
-    local_dir="checkpoints/nanojev",
-    allow_patterns=[
-        "best.safetensors",
-        "config.json",
-        "tokenizer/*",
-        "backbone_config/*",
-    ],
-)
-```
-
-Then:
-
-```bash
-PYTHONPATH=. python scripts/benchmark_nanojev.py \
-  --data data/benchmark/semantic_smoke.jsonl \
-  --nanojev-repo vendor/NanoJev \
-  --checkpoint-dir checkpoints/nanojev \
-  --output results/nanojev_semantic_smoke.jsonl
-```
-
-The CLI mode includes model-load time in its wall clock, so use it for quality first. For fair latency, start NanoJev's persistent server and run:
-
-```bash
-PYTHONPATH=. python scripts/benchmark_nanojev.py \
-  --data data/benchmark/semantic_smoke.jsonl \
-  --service-url http://127.0.0.1:8765 \
-  --output results/nanojev_semantic_smoke.jsonl
-```
+The benchmark is hashed before either model is evaluated.

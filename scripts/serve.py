@@ -5,8 +5,8 @@ import argparse
 from fastapi import FastAPI
 import uvicorn
 
-from open_system_one.schema import DecisionRequest, DecisionResponse, SystemOneRequest, SystemOneResponse
-from open_system_one.serving import load_engine
+from openjev.schema import DecisionRequest, DecisionResponse, SystemOneRequest, SystemOneResponse
+from openjev.serving import load_engine
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
     p.add_argument("--device",default=None)
     args=p.parse_args()
     engine=load_engine(args.checkpoint,args.device)
-    app=FastAPI(title="Open System One",version="0.1.0")
+    app=FastAPI(title="OpenJev",version="0.1.0")
 
     @app.get("/health")
     def health(): return {"ok":True,"device":engine.device,"temperature":engine.temperature}

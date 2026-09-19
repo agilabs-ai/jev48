@@ -1,42 +1,43 @@
-# Status
+# OpenJev status
 
-## Current state
+## Strategy
 
-**Local implementation: ready for first real GPU benchmark.**
+**Primary model path: NanoJev → OpenJev.**
 
-### Verified locally
+The earlier independent model is retained only as an ablation/history artifact.
 
-- 14 unit tests passing
+## Verified locally after the pivot
+
+- package namespace is now `openjev`
+- **14/14 tests passing**
 - Python package/scripts compile cleanly
-- simulator data: 2,500 rows with no cross-split family/content leakage
-- CPU baseline and exact dynamic-head smoke training run end-to-end
-- soft-target calibration metrics corrected for probabilistic ground truth
+- simulator data validator passes: 2,500 rows, zero split/family leakage
+- CPU evaluation smoke runs end-to-end
+- exact dynamic-head CPU training smoke runs end-to-end
 - NanoJev request/response adapter tested
-- NanoJev training-data bridge tested
+- NanoJev training-schema bridge tested
 - benchmark summaries include overall / seen / OOD / per-domain slices
-- launch-gate script refuses benchmark-hash mismatches
+- benchmark hash enforcement and launch-gate logic present
+- default Modal runner now starts from NanoJev rather than the independent model
 
-### First real external experiment
+## First external experiment
 
-`modal run modal_app.py`
+```bash
+modal run modal_app.py
+```
 
 It uses:
 
-- Qwen3-0.6B independent head-only model
-- automatic LoRA fallback if needed
-- public Banking77 + BoolQ seen domains
-- fully held-out DBpedia14 + AG News OOD domains
-- simulator probability data in training
-- public NanoJev checkpoint as a mandatory baseline
-- untuned Qwen option-likelihood baseline
-- deterministic candidate permutation in the frozen benchmark
+- public NanoJev checkpoint as initialization
+- same NanoJev 0.6B architecture
+- broader public semantic training data
+- known-probability simulator data
+- frozen semantic + fully held-out OOD benchmark
+- Brier-distribution fine-tuning
+- base NanoJev as the mandatory comparator
 
-### External boundary
+## External boundary
 
-This chat container has no outbound package/model network and no Modal credentials. A direct `pip install modal` attempt fails on DNS, and no local Modal profile is mounted here.
+This chat environment does not contain the user's Modal authentication and therefore cannot launch the external GPU job itself.
 
-The first thing requiring the user's environment is therefore authentication/execution on Modal. No API keys are needed for round 1.
-
-### Plan B
-
-If both independent head-only and LoRA miss the predeclared NanoJev gate, a separate `nanojev_plus_gpu` Modal function is prepared. It explicitly initializes from the public NanoJev checkpoint and is labeled as a derivative experiment.
+No paid LLM API is needed for the first run.

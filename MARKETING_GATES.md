@@ -1,128 +1,39 @@
-# Marketing / launch gates
+# OpenJev launch gates
 
-NanoJev already exists. That changes the claim.
+OpenJev is derived from NanoJev, so the launch story must be a **before/after improvement**, not “first OSS Jev.”
 
-The project should **not** launch as “the first open-source Jev” or imply that no open reproduction existed.
+## Preferred claim
 
-The strongest defensible stunt is:
+Only if the frozen benchmark supports it:
 
-> **I asked ChatGPT to rebuild a Jev-style decision model in a weekend. Then we benchmarked it against Jev and the strongest open baseline.**
+> **I gave ChatGPT NanoJev and told it to make it better. OpenJev beats the original on a frozen semantic decision benchmark while keeping the same 600M architecture.**
 
-If the numbers cooperate, upgrade the claim to:
+## Primary gate
 
-> **ChatGPT built a Jev-style model in a weekend that beats NanoJev on a broader semantic decision benchmark.**
+On exactly the same frozen benchmark:
 
-## Why NanoJev matters
+### Pass if either
 
-NanoJev already demonstrates:
+1. OpenJev has lower Brier than NanoJev and accuracy is no more than 2 percentage points lower; or
+2. OpenJev accuracy is at least 5 percentage points higher without a major Brier regression.
 
-- Qwen3-0.6B backbone
-- dynamic 2–255 candidate choices
-- zero output-token decoding
-- complete distributions
-- calibrated-decision experiments
-- strong navigation/game results
+## OOD gate
 
-Therefore merely recreating its architecture is not enough to create a strong technical story.
+Report fully held-out domains separately.
 
-## Headline benchmark gate
+A specific OOD-improvement claim requires a meaningful calibration improvement while retaining useful top-1 accuracy.
 
-Freeze `OpenDecisionBench` **before** looking at NanoJev results.
+## Do not claim “better” from
 
-Compare, on exactly the same rows:
+- a benchmark changed after seeing NanoJev outputs
+- different candidate order
+- different test rows
+- unmatched hardware latency
+- one cherry-picked domain
+- synthetic-only test data
 
-1. NanoJev public checkpoint
-2. Open System One
-3. untuned Qwen option-likelihood baseline
-4. Jev, if API access is available
-5. one cheap frontier model, optional
+## If OpenJev loses
 
-Primary metrics:
+Do not change the benchmark.
 
-- accuracy / argmax agreement
-- Brier
-- NLL
-- ECE
-- total variation on known-distribution cases
-- risk/coverage
-
-Systems metrics, reported separately:
-
-- p50/p95 or full-batch latency
-- questions/sec
-- candidate-count scaling
-- state-length scaling
-
-## What counts as “better than NanoJev”
-
-A credible marketing win requires **at least one meaningful, predeclared dimension**, not cherry-picking a random cell after results arrive.
-
-Preferred win condition:
-
-### Gate A — semantic generality
-
-Open System One beats NanoJev on the frozen multi-domain semantic benchmark on:
-
-- lower Brier **and**
-- non-inferior accuracy (within 2 percentage points),
-
-or:
-
-- at least +5 percentage points accuracy with no catastrophic calibration regression.
-
-### Gate B — OOD calibration
-
-On a fully held-out domain, Open System One has meaningfully lower Brier/TV than NanoJev while retaining useful top-1 accuracy.
-
-### Gate C — efficiency
-
-On matched hardware and matched input batches, Open System One produces comparable quality with materially better throughput or lower memory.
-
-This is harder because our v0 and NanoJev both duplicate complete candidate paths and do not perform prefix sharing.
-
-## What does **not** count
-
-Do not claim “better” because:
-
-- we win on a benchmark generated from our own training templates
-- we compare our tuned model against NanoJev on data NanoJev was never intended for without also disclosing that fact
-- latency was measured on different GPUs
-- one model includes cold-start/model-load time and the other does not
-- we cherry-pick one domain after inspecting all outcomes
-
-## Home-field benchmark
-
-For completeness, also run NanoJev's own released navigation benchmark.
-
-It is fine if NanoJev wins there.
-
-The more interesting result may be:
-
-| Benchmark | NanoJev | Open System One |
-|---|---|---|
-| NanoJev navigation | stronger | weaker |
-| broad semantic decisions | weaker | stronger |
-| calibrated simulator OOD | ? | ? |
-
-That supports a truthful claim that we extended the idea from a specialized reproduction toward a more general semantic decision model.
-
-## Go / no-go launch logic
-
-### Strong launch
-
-We beat NanoJev on a predeclared broad semantic/calibration gate.
-
-### Good launch
-
-We match it surprisingly closely with an independently built pipeline, tiny spend, and less than a weekend of iteration.
-
-### Weak launch
-
-NanoJev beats us everywhere meaningful.
-
-If that happens, do **not** force the “copy of Jev” story. Either:
-
-1. use NanoJev as initialization and improve it openly, or
-2. pivot the stunt to a transparent replication attempt: “ChatGPT tried to recreate Jev in a weekend; here is exactly where it failed.”
-
-The first option is better for marketing if we can ship a real improvement.
+The next experiment should address measured failure slices, most likely catastrophic forgetting or data balance, while retaining base NanoJev as the comparator.

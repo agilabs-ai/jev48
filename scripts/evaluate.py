@@ -4,9 +4,9 @@ from __future__ import annotations
 import argparse
 import json
 
-from open_system_one.evaluation import predict_examples
-from open_system_one.io import read_jsonl
-from open_system_one.serving import load_engine
+from openjev.evaluation import predict_examples
+from openjev.io import read_jsonl
+from openjev.serving import load_engine
 
 
 def main():

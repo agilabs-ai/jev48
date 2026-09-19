@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Export our unified decision rows into NanoJev's public training schema.
 
-This is intentionally a Plan-B bridge. Using it creates a derivative NanoJev++
-branch and must be disclosed separately from the independently built v0.
+This converts OpenJev training rows into NanoJev's public training schema.
+OpenJev v0 intentionally fine-tunes the public NanoJev checkpoint.
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ import argparse
 import json
 from pathlib import Path
 
-from open_system_one.io import read_jsonl
+from openjev.io import read_jsonl
 
 
 def convert(ex) -> dict:
@@ -62,7 +62,7 @@ def convert(ex) -> dict:
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--input-dir", default="data/combined")
-    p.add_argument("--output-dir", default="data/nanojev_bridge")
+    p.add_argument("--output-dir", default="data/openjev_training")
     args = p.parse_args()
     src, dst = Path(args.input_dir), Path(args.output_dir)
     dst.mkdir(parents=True, exist_ok=True)

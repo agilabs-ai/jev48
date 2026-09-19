@@ -13,12 +13,12 @@ import time
 import torch
 from torch import nn
 
-from open_system_one.batching import collate_examples
-from open_system_one.calibration import TemperatureScaler
-from open_system_one.evaluation import predict_examples
-from open_system_one.formatting import paths_for_example
-from open_system_one.io import dump_json, read_jsonl
-from open_system_one.model import DynamicDecisionModel, soft_target_loss
+from openjev.batching import collate_examples
+from openjev.calibration import TemperatureScaler
+from openjev.evaluation import predict_examples
+from openjev.formatting import paths_for_example
+from openjev.io import dump_json, read_jsonl
+from openjev.model import DynamicDecisionModel, soft_target_loss
 
 
 TOKEN_RE=re.compile(r"[A-Za-z0-9_$%+.-]+|[^\s]")

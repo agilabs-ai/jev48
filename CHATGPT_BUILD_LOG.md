@@ -93,3 +93,18 @@ Added after the initial runnable implementation:
 Local verification after this stage: **14/14 tests pass** and all Python modules compile.
 
 A direct Modal execution is not possible inside the ChatGPT container because no user Modal credentials/profile are mounted and outbound package/model networking is disabled. No secrets were requested or embedded.
+
+## Pivot: OpenJev
+
+The project strategy was changed after recognizing that NanoJev already implements most of the difficult Jev-style decision machinery.
+
+OpenJev v0 now:
+
+- starts from the public NanoJev checkpoint;
+- leaves the core 0.6B architecture unchanged;
+- adds broader semantic decision data;
+- adds known-probability simulator supervision;
+- evaluates base NanoJev and OpenJev on the same frozen semantic/OOD benchmark;
+- retains the earlier independent implementation only as an ablation/history artifact.
+
+The default `modal run modal_app.py` now executes this derivative OpenJev path directly.

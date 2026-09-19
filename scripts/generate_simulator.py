@@ -5,8 +5,8 @@ import argparse
 from collections import Counter
 from pathlib import Path
 
-from open_system_one.io import dump_json, write_jsonl
-from open_system_one.simulators import generate_dataset
+from openjev.io import dump_json, write_jsonl
+from openjev.simulators import generate_dataset
 
 
 def main():

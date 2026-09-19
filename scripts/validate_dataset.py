@@ -5,7 +5,7 @@ import argparse
 import hashlib
 from pathlib import Path
 
-from open_system_one.io import read_jsonl
+from openjev.io import read_jsonl
 
 
 def main():

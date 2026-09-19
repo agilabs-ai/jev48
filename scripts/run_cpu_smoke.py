@@ -7,9 +7,9 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import Ridge
 
-from open_system_one.formatting import paths_for_example
-from open_system_one.io import dump_json, read_jsonl
-from open_system_one.metrics import summarize
+from openjev.formatting import paths_for_example
+from openjev.io import dump_json, read_jsonl
+from openjev.metrics import summarize
 
 
 def flatten(examples):

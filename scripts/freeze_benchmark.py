@@ -5,7 +5,7 @@ import argparse
 from datetime import datetime, timezone
 from pathlib import Path
 
-from open_system_one.io import dump_json, file_sha256, read_jsonl
+from openjev.io import dump_json, file_sha256, read_jsonl
 
 
 def main():

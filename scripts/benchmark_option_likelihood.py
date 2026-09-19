@@ -7,11 +7,11 @@ import time
 from pathlib import Path
 import torch
 
-from open_system_one.baselines import BatchedOptionLikelihoodScorer, NaiveOptionLikelihoodScorer
-from open_system_one.formatting import candidate_path
-from open_system_one.io import dump_json, file_sha256, read_jsonl
-from open_system_one.metrics import summarize
-from open_system_one.reporting import sliced_summary
+from openjev.baselines import BatchedOptionLikelihoodScorer, NaiveOptionLikelihoodScorer
+from openjev.formatting import candidate_path
+from openjev.io import dump_json, file_sha256, read_jsonl
+from openjev.metrics import summarize
+from openjev.reporting import sliced_summary
 
 
 def main():

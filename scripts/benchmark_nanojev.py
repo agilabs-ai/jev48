@@ -10,10 +10,10 @@ import time
 
 import httpx
 
-from open_system_one.io import dump_json, file_sha256, read_jsonl
-from open_system_one.metrics import summarize
-from open_system_one.reporting import sliced_summary
-from open_system_one.nanojev import build_nanojev_request, parse_nanojev_response
+from openjev.io import dump_json, file_sha256, read_jsonl
+from openjev.metrics import summarize
+from openjev.reporting import sliced_summary
+from openjev.nanojev import build_nanojev_request, parse_nanojev_response
 
 
 def run_cli(repo: Path, checkpoint: Path, request: dict, *, precision: str, batch_questions: int) -> tuple[dict, float]:
@@ -63,6 +63,7 @@ def main() -> None:
     p.add_argument("--batch-questions", type=int, default=0, help="0 = all benchmark questions in one NanoJev forward batch")
     p.add_argument("--timeout", type=float, default=180.0)
     p.add_argument("--limit", type=int, default=0)
+    p.add_argument("--model-label", default="NanoJev")
     args = p.parse_args()
 
     data = Path(args.data)
@@ -99,7 +100,7 @@ def main() -> None:
     out.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
     execution = raw.get("execution", {}) if isinstance(raw, dict) else {}
     summary = {
-        "model": "NanoJev",
+        "model": args.model_label,
         "benchmark_sha256": file_sha256(data),
         "metrics": summarize(probs, targets),
         "slices": sliced_summary(probs, targets, examples),

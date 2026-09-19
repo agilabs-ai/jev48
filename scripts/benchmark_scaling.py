@@ -5,8 +5,8 @@ import argparse
 import statistics
 import time
 
-from open_system_one.schema import Candidate,DecisionRequest
-from open_system_one.serving import load_engine
+from openjev.schema import Candidate,DecisionRequest
+from openjev.serving import load_engine
 
 
 def main():

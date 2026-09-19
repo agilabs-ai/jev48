@@ -3,9 +3,9 @@ requires = ["setuptools>=70", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "open-system-one"
+name = "openjev"
 version = "0.1.0"
-description = "Open calibrated dynamic decision models: state + candidates in, probability distributions out."
+description = "OpenJev: a NanoJev-derived semantic and calibrated decision model."
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=2.0",
@@ -35,7 +35,7 @@ all = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["open_system_one*"]
+include = ["openjev*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
