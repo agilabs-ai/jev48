@@ -1,117 +1,195 @@
-# OpenJev
+# Jev48
 
-**A small, open Jev-style decision model built by extending NanoJev rather than rebuilding it.**
+**How close can ChatGPT get to Jev in one weekend?**
 
-OpenJev starts from the public **NanoJev** checkpoint and training code, then adds a broader semantic training distribution, simulator-grounded probability supervision, and a frozen multi-domain benchmark.
+TypeSafe released Jev, a System One model: unstructured state in, typed probability distributions out, without autoregressive answer generation.
 
-The weekend question is deliberately narrow:
+This repository is an auditable experiment. ChatGPT was given the goal, public internet research, open-source code, and external compute. It is allowed to reuse any public work it finds. The challenge is **not** “rebuild Jev from scratch.” It is:
 
-> Can a very small amount of additional training turn NanoJev from a strong game/navigation reproduction into a more general semantic decision model — without changing the core 0.6B architecture?
+> Given 48 hours and everything public on the internet, how much of Jev can an AI agent reproduce?
 
-OpenJev is **not affiliated with TypeSafe** and does not claim to reproduce Jev's proprietary architecture or RLCD method.
+## Status
 
-## What changed vs NanoJev
+**Experiment staged; final locked numbers are not published yet.**
 
-The first OpenJev experiment changes as little as possible:
+The complete training/evaluation pipeline is implemented and locally tested. The next external step is one Modal run, followed by the live Jev comparison through either TypeSafe or OpenRouter.
+
+## What ChatGPT chose
+
+After auditing the emerging OSS ecosystem, ChatGPT selected [`Mapika/decider`](https://github.com/Mapika/decider) as the strongest public starting point and pins it at:
 
 ```text
-NanoJev public checkpoint
-        │
-        ├── same Qwen3-0.6B backbone
-        ├── same dynamic decision architecture
-        ├── same 2–255 candidate interface
-        ├── same zero output-token decoding
-        │
-        ▼
-+ semantic decision data
-+ known-probability simulator data
-+ Brier/proper-distribution fine-tuning
-        │
-        ▼
-      OpenJev
+repo:   Mapika/decider
+commit: b08acf787d5d1f718a8c36c4677960f43772c7be
+model:  Mapika/decider-2b
 ```
 
-No new architecture is required for v0. The point is to isolate whether **training distribution + calibration supervision** are enough to create a meaningfully broader model.
+That choice is part of the experiment. A capable agent should use public prior art rather than deliberately reimplement it.
 
-## Default experiment
+### What Jev48 actually changes
 
-Run one command on Modal:
+The pinned starting model already trains on many hard-label decision and preference datasets. Jev48 adds one controlled experiment aimed at probability quality:
+
+> **Do not collapse multiple human judgments into one winner. Train on the empirical distribution of human votes.**
+
+We aggregate expert MT-Bench judgments over real model responses into distributions such as:
+
+```text
+Conversation A preferred   0.60
+Conversation B preferred   0.20
+Tie                        0.20
+```
+
+Then we compare, from the exact same base checkpoint:
+
+```text
+hard-majority labels
+vs.
+soft human-vote distributions
+```
+
+Same model, same replay data, same loss family, same benchmark, same candidate-selection rules.
+
+## Evaluation design
+
+There are two locked evaluation axes.
+
+### 1. Human preference calibration
+
+`lmsys/mt_bench_human_judgments`, pinned at revision:
+
+```text
+ee34b9d273a7a35e4415c87678526c56c471098c
+```
+
+The input contains anonymous real model conversations; model identities are hidden from the decision model. Multiple expert votes are aggregated into an empirical target distribution.
+
+The 80 MT-Bench question IDs are assigned outcome-blind to:
+
+```text
+50 train
+10 dev
+10 calibration
+10 locked test
+```
+
+All judgments for one question ID stay in one split.
+
+### 2. Broad transfer
+
+17 public tasks explicitly marked held-out/evaluation-only by the pinned `decider` training registry. Candidate order is randomized deterministically without using labels.
+
+Per task:
+
+```text
+10 calibration rows
+40 locked OOD rows
+```
+
+This directly attacks the failure mode seen in prior Jev-like work: in-domain parity that disappears on new tasks.
+
+## Integrity rules
+
+These are enforced in code:
+
+1. **Jev outputs are never used for training.**
+2. **Candidate selection reads dev only.**
+3. **Temperature is fitted after selection on calibration only.**
+4. **Locked `test` / `ood` are evaluated only after candidate selection.**
+5. **Jev, the public starting model, and Jev48 see identical frozen rows.**
+6. **Every benchmark file is hashed before live Jev is queried.**
+7. **If no fine-tune passes the predeclared dev gate, the public base remains the selected reproduction.** No forced win.
+8. **Starting code/weights and related work are disclosed.**
+
+See [`INTEGRITY.md`](INTEGRITY.md).
+
+## Run it
+
+### Local tests
 
 ```bash
-python -m pip install 'modal>=1.1,<2'
+python -m pip install -e '.[dev]'
+pytest
+```
+
+### Full GPU experiment
+
+```bash
+python -m pip install 'modal>=1.5,<2'
 modal setup
 modal run modal_app.py
 ```
 
-The default run:
+The run:
 
-1. builds public semantic train/test data;
-2. mixes it with known-probability simulator data;
-3. freezes and hashes `OpenDecisionBench`;
-4. downloads the pinned NanoJev source + public checkpoint;
-5. benchmarks **base NanoJev** before training;
-6. validates our data using NanoJev's own schema validator;
-7. fine-tunes the NanoJev checkpoint for a small number of steps;
-8. benchmarks **OpenJev** on the exact same frozen rows;
-9. applies predeclared launch gates;
-10. persists the checkpoint + raw results.
+1. builds and hashes the MT-Bench vote dataset;
+2. builds the pinned transfer/regression/replay suites;
+3. benchmarks untouched `decider-2b` on dev;
+4. trains one hard-majority and three soft-vote candidates;
+5. selects using dev only;
+6. benchmarks the selected model and base on the locked suite;
+7. fits each system's temperature on identical calibration rows;
+8. persists raw predictions, configs, model weights, hashes, and reports.
 
-Round 1 uses **no paid OpenAI/Anthropic APIs**.
+### Add the live Jev comparison
 
-See [`RUN_NOW.md`](RUN_NOW.md).
+Create the secret **locally**. Do not paste it into chat.
 
-## Training/evaluation data
-
-Seen training domains include:
-
-- Banking77-style intent/routing decisions
-- BoolQ-style binary semantic decisions
-- controlled known-probability simulator tasks
-
-OOD benchmark domains include completely held-out public domains such as:
-
-- DBpedia14
-- AG News
-
-Candidate order is deterministically shuffled in the frozen benchmark so neither model can benefit from stable label positions.
-
-## What counts as a win
-
-We do not need OpenJev to beat NanoJev on NanoJev's own maze benchmark.
-
-The predeclared main gate is broader semantic decision quality:
-
-- lower Brier with accuracy within 2 percentage points of NanoJev, **or**
-- at least +5 percentage points of accuracy without a large calibration regression.
-
-OOD is reported separately.
-
-See [`MARKETING_GATES.md`](MARKETING_GATES.md).
-
-## Attribution
-
-OpenJev v0 is explicitly **derived from NanoJev**:
-
-- source baseline: `TianyuCodings/NanoJev`
-- public checkpoint: `C-Tianyu/NanoJev`
-- pinned source revision: `71a513bb0163b5634467842b523ee0c0ed6fb1c7`
-
-NanoJev is MIT licensed. See [`NOTICE.md`](NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
-
-## Repo layout
-
-```text
-openjev/
-├── openjev/                 # benchmark/data/calibration support library
-├── scripts/                 # data, benchmark, adapters, ablations
-├── tests/                   # local verification
-├── data/                    # small local smoke/simulator fixtures
-├── experiments/             # independent-from-scratch ablation retained for history
-├── modal_app.py             # default OpenJev training + NanoJev comparison
-├── PROJECT_SPEC.md
-├── RUN_NOW.md
-├── MARKETING_GATES.md
-└── NOTICE.md
+```bash
+modal secret create jev48-secrets TYPESAFE_API_KEY=YOUR_KEY
+# or: modal secret create jev48-secrets OPENROUTER_API_KEY=YOUR_KEY
+modal run modal_jev.py --run-name <existing-run-name>
 ```
 
-The independent ChatGPT-built decision model is retained as an **ablation**, not the headline model. That work was useful for building the benchmark and understanding the problem, but the default project now optimizes for the actual weekend objective: **improve the strongest existing open baseline with the smallest credible change.**
+The separation is deliberate: model selection and locked open-model evaluation finish before any live Jev result exists. The Jev run is resumable after every successful row.
+
+## Outputs
+
+The final run produces:
+
+```text
+results/selection.json
+results/final/base.raw.jsonl
+results/final/base.calibrated.jsonl
+results/final/jev48.raw.jsonl
+results/final/jev48.calibrated.jsonl
+results/final/jev.raw.jsonl                 # if live Jev is run
+results/final/jev.calibrated.jsonl
+results/final_report.md
+results/final_report.json
+results/bootstrap-*.json
+site/index.html
+```
+
+The public result page is generated from `final_report.json`; marketing numbers are not manually typed into the page.
+
+## The claim
+
+No claim is hard-coded in advance.
+
+Possible honest outcomes include:
+
+- “ChatGPT got within X points of Jev in a weekend.”
+- “The public starting point was already surprisingly close; human-vote training improved calibration by Y.”
+- “The easy parts were reproducible quickly; Jev kept a large transfer advantage.”
+- “Our fine-tuning made it worse, so the public base won selection.”
+
+The strongest wording is generated **after** the locked receipts exist.
+
+## Related work
+
+This project is not the first open Jev-like implementation. See [`RELATED_WORK.md`](RELATED_WORK.md). The most important public references discovered during the challenge include:
+
+- TypeSafe Jev
+- Mapika/decider
+- jaredpalmer/kev
+- TianyuCodings/NanoJev
+- TheoLeeCJ/SemIf / openjev
+- razorback16/openjev
+- daseinlabs/open-jev
+
+The novelty claim here is deliberately narrow: **the 48-hour agent experiment, frozen direct comparison, and empirical human-vote probability supervision**, not invention of the System One model class.
+
+## License
+
+Jev48's original code is MIT. Upstream models/code/datasets retain their own licenses. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

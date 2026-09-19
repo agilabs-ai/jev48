@@ -1,43 +1,27 @@
-# OpenJev status
+# Status
 
-## Strategy
+## Completed in chat
 
-**Primary model path: NanoJev → OpenJev.**
+- code-level audit of major public Jev-like implementations;
+- pinned public starting point (`Mapika/decider`, commit `b08acf...`);
+- MT-Bench expert-vote aggregation with question-level leakage-safe splits;
+- held-out transfer suite bridge;
+- replay/regression suite bridge;
+- empirical soft-target training objective;
+- hard-vs-soft controlled ablation;
+- dev-only candidate-selection gate;
+- identical post-hoc temperature fitting;
+- resumable TypeSafe Jev client;
+- paired bootstrap script;
+- machine-generated static launch page;
+- Modal end-to-end runner;
+- local unit/integrity tests.
 
-The earlier independent model is retained only as an ablation/history artifact.
+## External work remaining
 
-## Verified locally after the pivot
+1. execute `modal run modal_app.py`;
+2. inspect dev-only selection receipt;
+3. obtain/use Jev access for the live comparison via TypeSafe or OpenRouter;
+4. run release/license audit and publish measured artifacts.
 
-- package namespace is now `openjev`
-- **14/14 tests passing**
-- Python package/scripts compile cleanly
-- simulator data validator passes: 2,500 rows, zero split/family leakage
-- CPU evaluation smoke runs end-to-end
-- exact dynamic-head CPU training smoke runs end-to-end
-- NanoJev request/response adapter tested
-- NanoJev training-schema bridge tested
-- benchmark summaries include overall / seen / OOD / per-domain slices
-- benchmark hash enforcement and launch-gate logic present
-- default Modal runner now starts from NanoJev rather than the independent model
-
-## First external experiment
-
-```bash
-modal run modal_app.py
-```
-
-It uses:
-
-- public NanoJev checkpoint as initialization
-- same NanoJev 0.6B architecture
-- broader public semantic training data
-- known-probability simulator data
-- frozen semantic + fully held-out OOD benchmark
-- Brier-distribution fine-tuning
-- base NanoJev as the mandatory comparator
-
-## External boundary
-
-This chat environment does not contain the user's Modal authentication and therefore cannot launch the external GPU job itself.
-
-No paid LLM API is needed for the first run.
+No final quality claim should be made before those receipts exist.

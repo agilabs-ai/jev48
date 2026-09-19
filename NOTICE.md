@@ -1,18 +1,7 @@
-# Attribution and scope
+# Scope and attribution
 
-OpenJev v0 is an explicit derivative experiment based on the public **NanoJev** project and checkpoint.
+Jev48 is an independent, time-boxed reproduction experiment. It is not affiliated with TypeSafe.
 
-Primary upstream:
+The current implementation starts from the public `Mapika/decider` model/code, pinned in `jev48/decider_bridge.py`. The upstream architecture and weights are credited as prior art rather than represented as Jev48 inventions.
 
-- NanoJev: `https://github.com/TianyuCodings/NanoJev`
-- pinned source revision: `71a513bb0163b5634467842b523ee0c0ed6fb1c7`
-- public model: `C-Tianyu/NanoJev`
-- upstream license: MIT
-
-OpenJev adds a broader semantic/calibration training distribution, benchmark tooling, OOD evaluation, and experiment orchestration around that public baseline.
-
-OpenJev is not affiliated with TypeSafe and does not claim to reproduce TypeSafe's proprietary Jev architecture, training data, or RLCD implementation.
-
-Other prior art retained as reference:
-
-- `daseinlabs/open-jev` for option-likelihood / prefix-scoring ideas.
+The git history intentionally retains earlier approaches (including an independent implementation and a NanoJev-based plan) so the research path can be audited.

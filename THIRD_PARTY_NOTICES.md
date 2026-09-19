@@ -1,21 +1,33 @@
 # Third-party notices
 
-## NanoJev
+Jev48's own orchestration/evaluation code is MIT-licensed. It does not vendor the upstream model source in the repository; Modal clones pinned upstream code during image construction.
 
-OpenJev v0 initializes from and fine-tunes the public NanoJev checkpoint and executes NanoJev's public training/inference code at a pinned revision.
+## Mapika/decider
 
-Repository: `TianyuCodings/NanoJev`
+Primary public starting point and runtime/training implementation.
 
-License: MIT
+- repository: https://github.com/Mapika/decider
+- pinned commit: `b08acf787d5d1f718a8c36c4677960f43772c7be`
+- weights: `Mapika/decider-2b`
+- upstream license: Apache-2.0
 
-Pinned revision used by the default experiment:
+Any redistributed derivative model weights/code must preserve the obligations of the upstream license and of the Qwen base model used by decider.
 
-```text
-71a513bb0163b5634467842b523ee0c0ed6fb1c7
-```
+## MT-Bench human judgments
 
-The upstream repository's MIT license and copyright notice must remain with redistributed upstream code or substantial portions thereof.
+- dataset: `lmsys/mt_bench_human_judgments`
+- pinned revision: `ee34b9d273a7a35e4415c87678526c56c471098c`
+- dataset card/license must be reviewed again before redistributing transformed rows publicly.
+
+Jev48 records provenance and can publish generation scripts/manifests instead of source text if redistribution terms require it.
+
+## Other datasets
+
+The transfer/replay suites are generated from public datasets referenced by `Mapika/decider`. Each source retains its own license. Before publishing transformed raw text, run the release audit and either:
+
+1. redistribute only sources whose terms permit it; or
+2. publish deterministic builder scripts + IDs/hashes instead of the text.
 
 ## TypeSafe Jev
 
-“Jev” is used descriptively as the target model primitive / comparison point. OpenJev is not affiliated with TypeSafe.
+“Jev” and “System One” are used descriptively for comparison. Jev48 is not affiliated with TypeSafe. TypeSafe API outputs should be redistributed only to the extent permitted by applicable terms; otherwise publish aggregate metrics and cryptographic receipts/IDs rather than prohibited raw content.

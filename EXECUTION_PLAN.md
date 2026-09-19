@@ -1,54 +1,37 @@
-# OpenJev execution plan
+# Execution plan
 
-## Primary path
+## Stage 0 — complete
 
-There is one main experiment:
+- audited public Jev-like implementations;
+- selected/pinned `Mapika/decider`;
+- implemented human-vote aggregation;
+- implemented pinned transfer/replay/regression builders;
+- implemented hard-vs-soft training ablation;
+- implemented dev-only selection gates;
+- implemented post-selection calibration;
+- implemented resumable live Jev scoring;
+- implemented paired bootstrap + static results page.
 
-```text
-NanoJev public checkpoint
-        ↓
-short semantic + calibration fine-tune
-        ↓
-OpenJev
-        ↓
-base-vs-OpenJev frozen benchmark
-```
-
-## Run A — local validation
-
-```bash
-make test
-PYTHONPATH=. python scripts/validate_dataset.py data/simulator
-```
-
-Expected: tests pass and simulator splits show no family/content leakage.
-
-## Run B — external OpenJev experiment
+## Stage 1 — Modal
 
 ```bash
 modal run modal_app.py
 ```
 
-This is the first run that matters for the launch.
+This builds data, trains candidates, selects on dev, and evaluates base/selected model on locked rows.
 
-## Decision after Run B
+## Stage 2 — live Jev
 
-### If OpenJev passes the predeclared gate
+```bash
+modal secret create jev48-secrets TYPESAFE_API_KEY=...
+# or OPENROUTER_API_KEY=...
+modal run modal_jev.py --run-name <stage-1-run>
+```
 
-Stop changing the model and reproduce the result with a second seed before launch.
+## Stage 3 — release audit
 
-### If OpenJev improves semantic accuracy but hurts calibration
-
-Try lower backbone LR and/or a separate calibration stage.
-
-### If OpenJev improves seen tasks but collapses OOD
-
-Adjust training mixture and replay data; do not alter the benchmark.
-
-### If OpenJev does not improve over NanoJev
-
-Inspect per-domain slices, catastrophic forgetting, and data balance before changing architecture.
-
-## Ablations
-
-The earlier independent model, LoRA path, option-likelihood baseline, and Jev adapter remain in the repo as secondary experiments. They are not the default OpenJev path.
+- check data/model licenses;
+- verify hashes and row counts;
+- run paired bootstrap;
+- generate static results page from JSON;
+- publish repo/model only after headline text is checked against receipts.

@@ -1,4 +1,4 @@
-from openjev.metrics import accuracy,brier,nll,expected_calibration_error,risk_coverage
+from jev48.metrics import accuracy,brier,nll,expected_calibration_error,risk_coverage
 
 
 def test_metrics_perfect():

@@ -1,30 +1,31 @@
 import pytest
 
-from openjev.schema import Candidate, DecisionExample
-from openjev.formatting import paths_for_example
+from jev48.schema import Candidate, DecisionExample
 
 
-def make():
+def make(kind="known_distribution"):
     return DecisionExample(
-        id="x",family_id="f",split="train",domain="demo",state="state",question="question?",
-        candidates=[Candidate(id="a",text="Alpha"),Candidate(id="b",text="Beta")],
-        target_probs=[0.25,0.75],target_kind="known_distribution",
+        id="x", family_id="f", split="train", domain="demo", state="state", question="question?",
+        candidates=[Candidate(id="a", text="Alpha"), Candidate(id="b", text="Beta")],
+        target_probs=[0.25, 0.75], target_kind=kind,
     )
 
 
 def test_valid_example_roundtrip():
-    ex=make()
+    ex = make()
     assert DecisionExample.model_validate_json(ex.model_dump_json()) == ex
     assert len(ex.sha256()) == 64
 
 
+def test_empirical_distribution_supported():
+    assert make("empirical_distribution").target_kind == "empirical_distribution"
+
+
 def test_rejects_bad_distribution():
     with pytest.raises(ValueError):
-        DecisionExample.model_validate(make().model_dump() | {"target_probs":[0.4,0.4]})
+        DecisionExample.model_validate(make().model_dump() | {"target_probs": [0.4, 0.4]})
 
 
-def test_candidate_ids_not_in_model_text():
-    ex=make()
-    paths=paths_for_example(ex)
-    assert "Alpha" in paths[0]
-    assert "<CANDIDATE>\na\n" not in paths[0]
+def test_deterministic_truth_must_be_one_hot():
+    with pytest.raises(ValueError):
+        DecisionExample.model_validate(make().model_dump() | {"target_kind": "deterministic_truth"})

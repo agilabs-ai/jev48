@@ -1,110 +1,109 @@
-# ChatGPT Build Log
+# ChatGPT build log
 
-This file records what was actually built and executed inside the ChatGPT session before any external GPU or paid-model run.
+This file records the project decisions made inside the chat before external GPU execution.
 
-## Starting brief
+## Phase 1 — naive independent reproduction
 
-The first committed artifact is `PROJECT_SPEC.md`: a weekend plan for testing whether the useful core of a Jev-style System One model can be reproduced with a small open backbone, dynamic candidate scoring, calibrated probabilities, and a transparent benchmark.
+The first approach treated Jev as a model primitive to reproduce independently: small Qwen backbone, dynamic decision head, synthetic/known-probability data, calibration and OOD tests.
 
-## Public references inspected
+That implementation was built and CPU-smoke-tested. It exposed the first real limitation: unseen-domain generalization, not GPU cost.
 
-The implementation direction was informed by the public NanoJev and open-jev projects. We deliberately did **not** copy either project wholesale:
+The git history retains this phase.
 
-- NanoJev establishes that a Qwen3-0.6B backbone plus dynamic decision heads is viable, but its public experiments are strongly game/navigation-oriented.
-- open-jev establishes option-likelihood / prefix-cache scoring as an important no-training baseline.
+## Phase 2 — NanoJev pivot
 
-Our v0 is benchmark-first and adds semantic tasks, known-probability simulators, leakage checks, calibration, risk-coverage metrics, hard-case mining, and explicit systems honesty about prefix reuse.
+A public-ecosystem search found NanoJev, which already implemented much of the 0.6B dedicated decision-head path. The project temporarily pivoted to “NanoJev + broader semantic/calibration data.”
 
-## Built in-chat
+This was later abandoned after a deeper ecosystem audit showed that it was not the strongest available starting point.
 
-- decision schema with dynamic candidate sets
-- dynamic scalar + set-attention decision head
-- soft-target CE + categorical Brier objective
-- temperature scaling
-- Brier, NLL, ECE, TV, risk-coverage evaluation
-- simulator-grounded probability datasets
-- fully held-out OOD simulator domain
-- dataset split/family/content leakage validator
-- candidate permutation augmentation + invariance check
-- semantic smoke benchmark + freeze manifest
-- CPU feature baseline
-- tiny local backbone using the exact dynamic-head training path
-- Qwen3-0.6B head-only trainer
-- option-likelihood baseline
-- Jev API benchmark adapter
-- frontier-teacher ensemble + hard-case pipeline
-- FastAPI `/v1/decision` and `/v1/systemone` endpoints
-- latency-vs-candidate-count benchmark
-- unit tests and GPU runbook
+The git history retains this phase too.
 
-## Executed in-chat
+## Phase 3 — ecosystem audit
 
-At packaging time:
+After the user made virality the primary KPI, the experiment was reframed around the direct story people actually care about:
 
-- unit tests: 10/10 passing
-- simulator examples generated: 2,500
-- leakage validation: passing
-- semantic smoke benchmark: 35 examples / 7 domains
-- CPU baseline: completed
-- tiny exact dynamic-head training: completed
-- calibration fit: completed
+> Jev launched. Give ChatGPT a weekend, the public internet, and compute. How close can it get?
 
-The local smoke models deliberately fail on a completely unseen equipment-failure domain. This is a useful finding: the harness exposes OOD generalization failure instead of hiding it.
+ChatGPT audited the relevant public projects at the code/methodology level, including:
 
-## Not executed in-chat
+- Mapika/decider
+- jaredpalmer/kev
+- TianyuCodings/NanoJev
+- TheoLeeCJ/SemIf
+- razorback16/openjev
+- daseinlabs/open-jev
 
-The chat container has no external model download access and no user API credentials. Therefore these require an external execution environment:
+The audit selected `Mapika/decider-2b` as the primary base because it already covered broad semantic decisions, high-cardinality candidates, calibration tooling and the TypeSafe API shape.
 
-1. download Qwen3-0.6B weights;
-2. run the first real head-only GPU training job;
-3. query Jev after the benchmark is frozen;
-4. optionally query premium teachers for mined hard cases.
+Pinned starting point:
 
-No H100 is required for the first run. See `GPU_RUNBOOK.md`.
+```text
+Mapika/decider
+b08acf787d5d1f718a8c36c4677960f43772c7be
+Mapika/decider-2b
+```
 
-## Methodological correction made during build
+## Phase 4 — distinct contribution
 
-For soft ground-truth target distributions, ECE and risk-coverage cannot pretend that target argmax is a binary realized outcome. The implementation therefore uses the target probability assigned to the model's selected class when computing expected correctness/error for known-distribution simulator data.
+A second audit found that `decider` already includes several preference datasets, so simply adding “real preference data” would be incremental.
+
+The project therefore narrowed the actual modification to:
+
+> learn from the empirical distribution of multiple human votes instead of collapsing judgments to one winner.
+
+Implemented in chat:
+
+- frozen MT-Bench question-level split before reading vote outcomes;
+- aggregation of multiple expert votes into soft target distributions;
+- model identities hidden from model input;
+- deterministic response-position randomization;
+- 17-task transfer suite from tasks explicitly marked held out in the pinned upstream registry;
+- regression/replay suites;
+- soft-target cross-entropy + categorical Brier fine-tuning;
+- controlled hard-majority vs soft-vote ablation;
+- dev-only model-selection gate;
+- identical post-hoc temperature calibration;
+- resumable live Jev scoring;
+- paired bootstrap comparison;
+- static result page generated from machine-readable receipts;
+- Modal orchestration for the complete experiment.
+
+## Current local verification
+
+Active public-tree tests pass locally with no network/GPU access.
+
+No final model-quality numbers are claimed yet because this chat environment has:
+
+- no NVIDIA GPU;
+- no outbound Hugging Face/model network access;
+- no user Modal credentials;
+- no TypeSafe API key.
+
+Those are execution/authentication boundaries, not unimplemented research steps.
+
+## Human vs ChatGPT roles
+
+Human:
+
+- chose the challenge and virality as the primary KPI;
+- can authenticate external services and approve spend;
+- can decide whether/when to publish.
+
+ChatGPT:
+
+- researched the ecosystem;
+- selected the public starting point;
+- designed the benchmark and integrity rules;
+- wrote the data/training/evaluation/cloud code;
+- will analyze external run receipts and iterate on dev-only evidence;
+- will prepare the final release/marketing artifact from measured results.
 
 ## Claim discipline
 
-Until real Qwen/Jev results exist, this repository is a **runnable replication experiment**, not evidence that Jev has been matched.
+Do not publish “from scratch.”
 
-## De-risk stage: NanoJev + public benchmark + Modal
+The defensible framing is:
 
-Added after the initial runnable implementation:
+> I gave ChatGPT 48 hours to recreate Jev using anything publicly available.
 
-- NanoJev as a mandatory first-class baseline
-- pinned NanoJev source/checkpoint adapters
-- independent-vs-derivative disclosure boundary
-- Banking77 + BoolQ seen-domain public data builder
-- DBpedia14 + AG News fully held-out OOD domains
-- deterministic candidate permutation in the frozen benchmark
-- overall / seen / OOD / per-domain metric slicing
-- benchmark-hash enforcement
-- predeclared PASS/FAIL launch gates vs NanoJev
-- untuned Qwen batched option-likelihood baseline
-- head-only Modal A10 experiment
-- automatic independent LoRA fallback
-- separately invoked NanoJev++ derivative A100 branch
-- data bridge into NanoJev's public training schema
-- Modal artifact persistence/download runbook
-
-Local verification after this stage: **14/14 tests pass** and all Python modules compile.
-
-A direct Modal execution is not possible inside the ChatGPT container because no user Modal credentials/profile are mounted and outbound package/model networking is disabled. No secrets were requested or embedded.
-
-## Pivot: OpenJev
-
-The project strategy was changed after recognizing that NanoJev already implements most of the difficult Jev-style decision machinery.
-
-OpenJev v0 now:
-
-- starts from the public NanoJev checkpoint;
-- leaves the core 0.6B architecture unchanged;
-- adds broader semantic decision data;
-- adds known-probability simulator supervision;
-- evaluates base NanoJev and OpenJev on the same frozen semantic/OOD benchmark;
-- retains the earlier independent implementation only as an ablation/history artifact.
-
-The default `modal run modal_app.py` now executes this derivative OpenJev path directly.
+The repository explicitly discloses that ChatGPT found and reused public prior art.

@@ -1,67 +1,36 @@
-# Modal runbook — OpenJev
+# Modal runbook
 
-OpenJev v0 uses the public NanoJev checkpoint as its starting point. The default cloud job does not train a separate architecture first.
+The default runner uses one H100 for the model experiments. H100 is chosen for iteration speed/convenience, not because the 2B model fundamentally requires it.
 
-## Authenticate once
+## Setup
 
 ```bash
-python -m pip install 'modal>=1.1,<2'
+python -m pip install 'modal>=1.5,<2'
 modal setup
 ```
 
-## Run
+## Core experiment
 
 ```bash
 modal run modal_app.py
 ```
 
-## What the run does
+The output includes a run name. Artifacts persist to `jev48-artifacts`.
 
-```text
-public semantic data + simulator data
-                │
-                ▼
-       validate + freeze benchmark
-                │
-                ▼
-      download base NanoJev
-          │             │
-          │             └── benchmark base NanoJev
-          │
-          ▼
-  short Brier fine-tune
-          │
-          ▼
-        OpenJev
-          │
-          └── benchmark same frozen rows
-                │
-                ▼
-          launch gate PASS/FAIL
+## Live Jev
+
+Store the key in Modal, not source/chat:
+
+```bash
+modal secret create jev48-secrets TYPESAFE_API_KEY=YOUR_KEY
+# or: modal secret create jev48-secrets OPENROUTER_API_KEY=YOUR_KEY
+modal run modal_jev.py --run-name RUN_NAME
 ```
 
-The default GPU is an **A100**, chosen for friction reduction rather than necessity. This is a 0.6B model and does not require an H100.
+If interrupted, `benchmark_jev.py` resumes row by row from its existing receipt.
 
-## Outputs
+## Download
 
-Artifacts are stored in the Modal volume:
-
-```text
-openjev-artifacts
+```bash
+modal volume get jev48-artifacts RUN_NAME ./jev48-modal-results
 ```
-
-The run prints the exact download command. Important files:
-
-```text
-results/nanojev_open_decision.summary.json
-results/openjev_open_decision.summary.json
-results/openjev_vs_nanojev.md
-results/openjev_gate.json
-checkpoints/openjev/
-```
-
-## Cost control
-
-Round 1 uses public labels and requires no paid LLM API.
-
-Do not add frontier-teacher labels until the frozen comparison tells us they are needed.
