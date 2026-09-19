@@ -1,60 +1,42 @@
-# Current Status
+# Status
 
-## Executed in this build environment
+## Current state
 
-- 10 unit tests: **passing**
-- simulator corpus generated: **2,500 examples**
-  - train: 1,300
-  - dev: 200
-  - calibration: 200
-  - test: 300
-  - fully held-out OOD domain: 500
-- leakage validator: **passing**
-  - unique IDs: 2,500
-  - unique families: 2,500
-  - no exact cross-split content duplication
-- semantic smoke benchmark: **35 hand-authored examples / 7 domains**
-- benchmark freeze manifest generated
-- CPU TF-IDF/Ridge pipeline baseline executed
-- exact `DynamicDecisionModel` training path executed with a tiny local backbone
-- temperature scaling fitted successfully
+**Local implementation: ready for first real GPU benchmark.**
 
-## Current smoke findings
+### Verified locally
 
-These are pipeline checks, **not Jev comparison results**.
+- 14 unit tests passing
+- Python package/scripts compile cleanly
+- simulator data: 2,500 rows with no cross-split family/content leakage
+- CPU baseline and exact dynamic-head smoke training run end-to-end
+- soft-target calibration metrics corrected for probabilistic ground truth
+- NanoJev request/response adapter tested
+- NanoJev training-data bridge tested
+- benchmark summaries include overall / seen / OOD / per-domain slices
+- launch-gate script refuses benchmark-hash mismatches
 
-The linear CPU baseline reaches 76% argmax agreement on the seen-domain simulator test set but collapses to its uniform behavior on the entirely unseen equipment domain.
+### First real external experiment
 
-The tiny local dynamic-head model likewise reaches 76% seen-domain argmax agreement and fails on the unseen domain. This is expected and useful: it shows the harness exposes OOD generalization failure rather than hiding it.
+`modal run modal_app.py`
 
-See `results/cpu_smoke.json` and `results/tiny_cpu_train.json`.
+It uses:
 
-## Not yet executed here
+- Qwen3-0.6B independent head-only model
+- automatic LoRA fallback if needed
+- public Banking77 + BoolQ seen domains
+- fully held-out DBpedia14 + AG News OOD domains
+- simulator probability data in training
+- public NanoJev checkpoint as a mandatory baseline
+- untuned Qwen option-likelihood baseline
+- deterministic candidate permutation in the frozen benchmark
 
-### Real Qwen run
+### External boundary
 
-Blocked by this chat container having no internet/model cache and no `transformers` installation. The code and commands are ready.
+This chat container has no outbound package/model network and no Modal credentials. A direct `pip install modal` attempt fails on DNS, and no local Modal profile is mounted here.
 
-### Jev benchmark
+The first thing requiring the user's environment is therefore authentication/execution on Modal. No API keys are needed for round 1.
 
-Blocked until a `TYPESAFE_API_KEY` is available in the execution environment.
+### Plan B
 
-### Frontier teacher labeling
-
-Blocked until provider API credentials are available in the execution environment. The OpenAI/Anthropic ensemble code is ready.
-
-### LoRA/full fine-tuning
-
-Intentionally not implemented as the first move. Head-only is the decision gate.
-
-## Immediate next external action
-
-Run:
-
-```bash
-pip install -e '.[train,dev]'
-make data
-PYTHONPATH=. python scripts/train.py --config configs/train_head_fast.yaml
-```
-
-A single 24 GB NVIDIA GPU should be a comfortable target for this first experiment; an H100 is not required.
+If both independent head-only and LoRA miss the predeclared NanoJev gate, a separate `nanojev_plus_gpu` Modal function is prepared. It explicitly initializes from the public NanoJev checkpoint and is labeled as a derivative experiment.

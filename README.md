@@ -1,3 +1,19 @@
+
+## Current de-risk path
+
+NanoJev is a **mandatory baseline**. The independent v0 was not forked from NanoJev; its public source/model were inspected and adapted only for comparison.
+
+Run the first real experiment with:
+
+```bash
+python -m pip install 'modal>=1.1,<2'
+modal setup
+modal run modal_app.py
+```
+
+Round 1 uses public labels and requires **no paid model APIs**. It benchmarks head-only Open System One vs untuned Qwen vs NanoJev, then automatically runs LoRA only if the head-only model misses the predeclared launch gate. See `RUN_NOW.md`, `MODAL_RUNBOOK.md`, `MARKETING_GATES.md`, and `NANOJEV_BASELINE.md`.
+
+If both independent variants lose, `modal run modal_app.py::nanojev_plus_gpu` is the explicitly derivative Plan-B branch.
 # Open System One
 
 **State + decision candidates in. Full probability distributions out. Zero output-token decoding.**

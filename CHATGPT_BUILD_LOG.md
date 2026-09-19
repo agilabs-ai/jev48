@@ -69,3 +69,27 @@ For soft ground-truth target distributions, ECE and risk-coverage cannot pretend
 ## Claim discipline
 
 Until real Qwen/Jev results exist, this repository is a **runnable replication experiment**, not evidence that Jev has been matched.
+
+## De-risk stage: NanoJev + public benchmark + Modal
+
+Added after the initial runnable implementation:
+
+- NanoJev as a mandatory first-class baseline
+- pinned NanoJev source/checkpoint adapters
+- independent-vs-derivative disclosure boundary
+- Banking77 + BoolQ seen-domain public data builder
+- DBpedia14 + AG News fully held-out OOD domains
+- deterministic candidate permutation in the frozen benchmark
+- overall / seen / OOD / per-domain metric slicing
+- benchmark-hash enforcement
+- predeclared PASS/FAIL launch gates vs NanoJev
+- untuned Qwen batched option-likelihood baseline
+- head-only Modal A10 experiment
+- automatic independent LoRA fallback
+- separately invoked NanoJev++ derivative A100 branch
+- data bridge into NanoJev's public training schema
+- Modal artifact persistence/download runbook
+
+Local verification after this stage: **14/14 tests pass** and all Python modules compile.
+
+A direct Modal execution is not possible inside the ChatGPT container because no user Modal credentials/profile are mounted and outbound package/model networking is disabled. No secrets were requested or embedded.

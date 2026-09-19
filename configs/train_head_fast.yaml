@@ -1,4 +1,4 @@
-base_model: Qwen/Qwen3-0.6B-Base
+base_model: Qwen/Qwen3-0.6B
 revision: null
 train_mode: head_only
 data_dir: data/simulator

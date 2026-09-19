@@ -1,0 +1,25 @@
+base_model: Qwen/Qwen3-0.6B
+revision: null
+train_mode: lora
+data_dir: data/combined
+output_dir: checkpoints/lora-public-fast
+device: auto
+dtype: bf16
+max_length: 2048
+set_attention: true
+set_dim: 128
+batch_questions: 1
+steps: 150
+eval_every: 25
+lr: 0.0001
+weight_decay: 0.01
+grad_clip: 1.0
+ce_weight: 1.0
+brier_weight: 0.25
+permute_candidates: true
+gradient_checkpointing: true
+lora_r: 8
+lora_alpha: 16
+lora_dropout: 0.0
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+seed: 17

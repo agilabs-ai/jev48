@@ -81,6 +81,12 @@ def load_engine(checkpoint: str | Path, device: str | None = None) -> LoadedEngi
     backbone = load_hf_backbone(
         metadata["base_model"], device=device, dtype=metadata.get("inference_dtype", "auto"), revision=metadata.get("revision")
     )
+    if metadata.get("train_mode") == "lora":
+        try:
+            from peft import PeftModel
+        except ImportError as exc:
+            raise RuntimeError("LoRA checkpoint requires peft: pip install -e '.[train]'") from exc
+        backbone = PeftModel.from_pretrained(backbone, p / metadata.get("adapter_path", "adapter"))
     model, metadata = load_head_checkpoint(p, backbone)
     model = model.to(device).eval()
     return LoadedEngine(model, tokenizer, device, int(metadata.get("max_length", 2048)), float(metadata.get("temperature", 1.0)))
