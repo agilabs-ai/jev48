@@ -49,7 +49,13 @@ def run_benchmark(run_name: str, benchmark: str, repo_commit: str, limit: int = 
     shutil.copytree("/workspace/jev48", work)
     model = work / "selected-model"
     shutil.copytree(source_model, model)
-    scripts = {"phishing": "benchmark_phishing.py", "jevbench": "benchmark_jevbench_public.py"}
+    scripts = {
+        "phishing": "benchmark_phishing.py",
+        "jevbench": "benchmark_jevbench_public.py",
+        "btzsc": "benchmark_btzsc.py",
+        "clash": "benchmark_clash.py",
+        "code-review": "benchmark_code_review.py",
+    }
     if benchmark not in scripts: raise ValueError(f"unknown benchmark {benchmark}")
     output = work / f"results/public/{benchmark}.jsonl"
     script = work / "scripts" / scripts[benchmark]

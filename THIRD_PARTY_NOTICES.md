@@ -92,6 +92,29 @@ Their row-level combined derivative is withheld until every source's redistribut
 terms are individually audited. Public receipts contain only hashes, counts, source
 identifiers, and aggregate metrics.
 
+## BTZSC pilot
+
+`AbdelStark/jev-benchmarks` at commit
+`0d610cc53e79bcbec691312b0c4adb4a0e371642` is Apache-2.0. Jev48 repeats its
+pre-registered 300-row sampling protocol against `btzsc/btzsc` revision
+`fef2a2ac62b69c58670047dddf045c53d7c3cb5e` and publishes aggregate results.
+
+## Determinest code-review benchmark
+
+`gemanor/jev-code-review-benchmark` at commit
+`95932b43f227dc759a7147d4e2d371388a148eb8` is MIT. Jev48 runs all 24 evaluation
+families using the source study's primary native rule protocol. The source Jev
+reference aggregates three rounds; Jev48 is deterministic and is run once.
+
+## CLASH Jev adaptation
+
+`AIPI-mvoronovych/JEVBenchmark-Contradiction-Detection` at commit
+`e1bbdc7d4f4ab16b30d7c11faca55ed9db50bd9a` publishes the human-verified CLASH
+test split and Jev predictions but does not declare a repository-level license.
+Jev48 downloads the pinned source for evaluation, publishes only aggregate results,
+source hashes, code, and non-content row identifiers, and does not redistribute the
+caption dataset.
+
 ## Other public prior art
 
 The research process also inspected public work including `jaredpalmer/kev`, `TianyuCodings/NanoJev`, `TheoLeeCJ/SemIf`, `razorback16/openjev`, and `daseinlabs/open-jev`. See `RELATED_WORK.md`.
