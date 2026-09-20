@@ -1,0 +1,36 @@
+# Jev48
+
+> Jev48 is an open, auditable reproduction of TypeSafe's Jev typed probabilistic decision model, built by ChatGPT in one weekend and evaluated on six public benchmark suites.
+
+Jev48 is an independent Edge Labs AI experiment and is not affiliated with TypeSafe. The published comparison covers 6,300 decisions or cases. Jev48 wins one of six suites. Comparisons are paired, aggregate/unpaired, or repeated-reference as explicitly labeled; do not describe every row as a direct head-to-head test. Jev outputs were not used for training or model selection.
+
+Canonical project URL: https://getedge.cc/jev48/
+Canonical source: https://github.com/edgelabs-ai/jev48
+Release: v1.0.0
+License: MIT for original code; third-party components retain their own licenses.
+
+## Primary resources
+
+- [Project README](https://github.com/edgelabs-ai/jev48/blob/main/README.md): Overview, complete scorecard, architecture, and reproduction instructions.
+- [Public benchmark methodology](https://github.com/edgelabs-ai/jev48/blob/main/RESULTS_PUBLIC.md): Public comparison protocol and limitations.
+- [Complete results](https://github.com/edgelabs-ai/jev48/blob/main/RESULTS.md): Open-model and public benchmark outcomes.
+- [Benchmark registry](https://github.com/edgelabs-ai/jev48/blob/main/BENCHMARK_REGISTRY.md): Eligibility decisions and audited exclusions.
+- [Model card](https://github.com/edgelabs-ai/jev48/blob/main/MODEL_CARD.md): Model provenance, intended use, limitations, and loading instructions.
+- [Release receipts](https://github.com/edgelabs-ai/jev48/tree/main/receipts): Frozen hashes, summaries, manifests, and smoke-test evidence.
+- [Model checkpoint](https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0): Versioned weights and checksums.
+
+## Benchmark results
+
+- Typed decisions: Jev48 57.7%; published Jev 72.7%; 2,000 decisions; aggregate/unpaired.
+- PhishNChips v5.2: Jev48 50.0%; published Jev 62.6%; 2,000 emails; aggregate/unpaired. Jev48 AUROC 0.769 vs published Jev 0.689.
+- JevBench public v1.2.2: Jev48 69.7%; Jev 86.6%; 231 tasks; paired outcomes.
+- BTZSC pilot: Jev48 83.3%; published Jev 75.3%; 300 texts; aggregate/unpaired.
+- Code review: Jev48 81.9%; Jev reference 99.0%; 480 rule decisions; repeated reference.
+- CLASH conflicts: Jev48 0.0%; published Jev 98.6%; 1,289 cases; aggregate/unpaired.
+
+## Citation and provenance
+
+- [Citation metadata](https://github.com/edgelabs-ai/jev48/blob/main/CITATION.cff): Preferred software citation.
+- [Integrity rules](https://github.com/edgelabs-ai/jev48/blob/main/INTEGRITY.md): Selection, calibration, and locked-evaluation contract.
+- [Data sources](https://github.com/edgelabs-ai/jev48/blob/main/DATA_SOURCES.md): Source datasets and pinned revisions.
+- [Third-party notices](https://github.com/edgelabs-ai/jev48/blob/main/THIRD_PARTY_NOTICES.md): Licenses and attribution.

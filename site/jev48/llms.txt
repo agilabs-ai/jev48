@@ -1,0 +1,21 @@
+# Jev48
+
+> Jev48 is an open, auditable reproduction of TypeSafe's Jev typed probabilistic decision model, built by ChatGPT in one weekend and evaluated on six public benchmark suites.
+
+This independent Edge Labs AI experiment publishes its model, source, methodology, and frozen receipts. Jev48 evaluated 6,300 decisions or cases and won one of six suites. Comparison protocols differ by suite and are disclosed in the report.
+
+## Primary resources
+
+- [LLM-readable report](https://getedge.cc/jev48/index.md): Complete scorecard and canonical links.
+- [Human-readable report](https://getedge.cc/jev48/): Interactive benchmark page.
+- [Source repository](https://github.com/edgelabs-ai/jev48): Code, README, tests, and documentation.
+- [Public methodology](https://github.com/edgelabs-ai/jev48/blob/main/RESULTS_PUBLIC.md): Comparison design and limitations.
+- [Benchmark registry](https://github.com/edgelabs-ai/jev48/blob/main/BENCHMARK_REGISTRY.md): Suite eligibility and exclusions.
+- [Model card](https://github.com/edgelabs-ai/jev48/blob/main/MODEL_CARD.md): Provenance, intended use, and limitations.
+- [Receipts](https://github.com/edgelabs-ai/jev48/tree/main/receipts): Frozen evidence and hashes.
+- [Model release](https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0): Checkpoint and checksums.
+
+## Optional
+
+- [Citation](https://github.com/edgelabs-ai/jev48/blob/main/CITATION.cff): Preferred attribution.
+- [Third-party notices](https://github.com/edgelabs-ai/jev48/blob/main/THIRD_PARTY_NOTICES.md): Licenses and upstream attribution.

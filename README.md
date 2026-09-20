@@ -1,6 +1,15 @@
-# Jev48
+# Jev48: Open Jev Reproduction and Benchmark
+
+**Jev48 is an open, auditable reproduction of TypeSafe's Jev decision model, built by
+ChatGPT in one weekend and evaluated across six public benchmarks.** It includes the
+2B checkpoint, benchmark code, frozen receipts, model card, and complete results.
 
 An **Edge Labs AI** measured experiment. Independent and not affiliated with TypeSafe.
+
+[Benchmark report](https://getedge.cc/jev48/) ·
+[Model release](https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0) ·
+[Results and methodology](RESULTS_PUBLIC.md) ·
+[Machine-readable project guide](llms.txt)
 
 **How close can ChatGPT get to Jev in one weekend?**
 
