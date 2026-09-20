@@ -1,0 +1,54 @@
+{
+  "benchmark": "BTZSC pilot v1",
+  "benchmark_revision": "0d610cc53e79bcbec691312b0c4adb4a0e371642",
+  "comparison": "unpaired aggregate Jev reference; identical deterministic sampling protocol",
+  "dataset_revision": "fef2a2ac62b69c58670047dddf045c53d7c3cb5e",
+  "mean_latency_ms": 188.0818513466667,
+  "metrics": {
+    "by_dataset": {
+      "agnews": {
+        "jev48_accuracy": 0.92,
+        "jev48_accuracy_wilson_ci95": [
+          0.8500189229905127,
+          0.9589065385156194
+        ],
+        "jev_accuracy": 0.91,
+        "n": 100
+      },
+      "banking77": {
+        "jev48_accuracy": 0.83,
+        "jev48_accuracy_wilson_ci95": [
+          0.7445199523239887,
+          0.8910643388594006
+        ],
+        "jev_accuracy": 0.87,
+        "n": 100
+      },
+      "emotiondair": {
+        "jev48_accuracy": 0.75,
+        "jev48_accuracy_wilson_ci95": [
+          0.656955364519384,
+          0.8245478863771232
+        ],
+        "jev_accuracy": 0.48,
+        "n": 100
+      }
+    },
+    "jev48_accuracy": 0.8333333333333334,
+    "jev48_accuracy_wilson_ci95": [
+      0.7870033503873166,
+      0.8712346687963193
+    ],
+    "jev_accuracy": 0.7533333333333333,
+    "n": 300
+  },
+  "mode": "exact preregistered 300-row pilot manifest and native single-choice protocol",
+  "model": {
+    "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
+    "repo_commit": "9c242f5ad77300514d52784dd23f37d9211cd6d4",
+    "run_name": "jev48-1789867911",
+    "script_sha256": "8166ce95f49a4a81dfca7029583574230ba142c9cbac99110360ae4ae7086bef",
+    "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+  },
+  "runtime_seconds": 85.88136761300001
+}

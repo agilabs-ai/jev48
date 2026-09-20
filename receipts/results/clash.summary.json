@@ -1,0 +1,26 @@
+{
+  "benchmark": "CLASH text-vs-text contradiction detection",
+  "benchmark_revision": "e1bbdc7d4f4ab16b30d7c11faca55ed9db50bd9a",
+  "comparison": "same public rows and main protocol; aggregate Jev reference",
+  "mean_latency_ms": 83.39379944840955,
+  "metrics": {
+    "jev48_accuracy": 0.0,
+    "jev48_accuracy_wilson_ci95": [
+      0.0,
+      0.0029713301615483714
+    ],
+    "jev_accuracy": 0.9858603568657874,
+    "n": 1289
+  },
+  "mode": "published Jev main condition: original COCO caption as image description, conflicting caption, native four-way choice",
+  "model": {
+    "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
+    "repo_commit": "b600a6410569277cf8eac25c143058f00dd8c3f8",
+    "run_name": "jev48-1789867911",
+    "script_sha256": "ed0712870ae4af226a0fb0b6a7b560fe65ee326fea770465e1c84f7785505377",
+    "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+  },
+  "runtime_seconds": 130.06331451,
+  "source_sha256": "24b7979bbadde88f1c3209210e16fab83df323321d30c7643578423b6dd5b071",
+  "source_url": "https://raw.githubusercontent.com/AIPI-mvoronovych/JEVBenchmark-Contradiction-Detection/e1bbdc7d4f4ab16b30d7c11faca55ed9db50bd9a/data/synthetic_captions_test_filtered.json"
+}

@@ -26,3 +26,27 @@ are preserved in the machine receipt but are not asserted as cross-system-compar
 ## Honest launch claim
 
 On this public zero-shot benchmark, Jev leads Jev48 by 15.0 percentage points in accuracy. This is descriptive: no paired Jev predictions are available for a significance test.
+# Complete public Jev benchmark scorecard
+
+The launch scorecard includes every suite in [`BENCHMARK_REGISTRY.md`](BENCHMARK_REGISTRY.md).
+The three additional full-suite runs were frozen in commits `9c242f5` and `b600a64`
+before their respective paid outcomes.
+
+| Benchmark | Jev48 | Published Jev | Population | Comparison |
+|---|---:|---:|---:|---|
+| LocalLLaMA/typed-decisions | 57.7% | 72.7% | 2,000 decisions | aggregate, unpaired |
+| PhishNChips v5.2 | 50.1% accuracy / .769 AUROC | 62.6% / .689 | 2,000 emails | aggregate, unpaired |
+| JevBench v1.2.2 public | 69.7% | 86.6% | 231 tasks | paired public outcomes |
+| BTZSC pilot v1 | **83.3%** | 75.3% | 300 texts | aggregate, identical sampling |
+| Determinest code review | 81.9% | 99.0% | 480 rule decisions | Jev reference aggregates 3 rounds |
+| CLASH text contradiction | 0.0% | 98.6% | 1,289 cases | aggregate, identical main condition |
+
+BTZSC is the one full-suite accuracy win. On PhishNChips, Jev48 has higher AUROC
+but worse thresholded decisions. The CLASH result is a real failure: the model puts
+nearly all probability on one source-grounded answer instead of the explicit
+contradiction option. No suite or result was removed after evaluation.
+
+The additional GPU subprocess runtimes totaled 416.3 L40S-seconds including one
+discarded CLASH adapter attempt. At the recorded Modal L40S rate of $0.000542/s,
+that is $0.226 of measured GPU runtime; allowing conservatively for container startup
+keeps this benchmark round below $0.40, versus the authorized $10 ceiling.

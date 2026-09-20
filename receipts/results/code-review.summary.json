@@ -1,0 +1,45 @@
+{
+  "benchmark": "Determinest supplied-rule code review",
+  "benchmark_revision": "95932b43f227dc759a7147d4e2d371388a148eb8",
+  "comparison": "same evaluation families and primary protocol; Jev reference aggregates three repeated rounds",
+  "mean_case_latency_ms": 396.13091876666664,
+  "metrics": {
+    "by_category": {
+      "code_quality": {
+        "jev48_accuracy": 0.8416666666666667,
+        "jev48_accuracy_wilson_ci95": [
+          0.7901494818270289,
+          0.8824186728795727
+        ],
+        "n": 240
+      },
+      "correctness": {
+        "jev48_accuracy": 0.7958333333333333,
+        "jev48_accuracy_wilson_ci95": [
+          0.7403647376289731,
+          0.8419808597389379
+        ],
+        "n": 240
+      }
+    },
+    "jev48_accuracy": 0.81875,
+    "jev48_accuracy_wilson_ci95": [
+      0.7818010659556771,
+      0.8506375033761833
+    ],
+    "jev_accuracy": 0.9902777777777778,
+    "n_cases": 120,
+    "n_decisions": 480
+  },
+  "mode": "all 24 evaluation families, five versions each, four native rule decisions per case; one deterministic pass versus Jev source study's three rounds",
+  "model": {
+    "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
+    "repo_commit": "9c242f5ad77300514d52784dd23f37d9211cd6d4",
+    "run_name": "jev48-1789867911",
+    "script_sha256": "d3834231b8a00c440c9b1fa09a08ecbe8029ed08e2f73c3d1ca3098d9bd555a3",
+    "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+  },
+  "reference_csv_sha256": "699e63df6c976c68176fcbc1594ba798ff005a5ac5559571e67710124eb44ed2",
+  "runtime_seconds": 69.374387072,
+  "source_archive_sha256": "0300f05e30853629b370ccd41f85d9448ca1719ed6b75ce2c4a98c5c3c6e4927"
+}
