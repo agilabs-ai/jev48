@@ -77,6 +77,28 @@ def validate_public_run(name: str, summary: dict, rows: list[dict], expected_cou
     return errors
 
 
+def validate_new_row_semantics(name: str, summary: dict, rows: list[dict]) -> list[str]:
+    errors = []
+    if name == "btzsc":
+        if any(bool(r.get("correct")) != (r.get("predicted") == r.get("target")) for r in rows):
+            errors.append("BTZSC correctness fields do not match predictions/targets")
+        fixed = {"agnews": .91, "emotiondair": .48, "banking77": .87}
+        if any(abs(summary["metrics"]["by_dataset"][k]["jev_accuracy"] - v) > 1e-12 for k, v in fixed.items()):
+            errors.append("BTZSC published Jev reference mismatch")
+    elif name == "code-review":
+        if any(r.get("_source_expected") is not None and (r.get("expected") != r["_source_expected"] or bool(r.get("correct")) != (r.get("predicted") == r["_source_expected"])) for r in rows):
+            errors.append("code-review rows do not match pinned source answers")
+        if abs(summary["metrics"].get("jev_accuracy", -1) - 0.9902777777777778) > 1e-12:
+            errors.append("code-review published Jev reference mismatch")
+    elif name == "clash":
+        conflict = "Conflicting information – cannot answer."
+        if any(bool(r.get("correct")) != (r.get("predicted") == conflict) for r in rows):
+            errors.append("CLASH correctness fields do not match the contradiction target")
+        if abs(summary["metrics"].get("jev_accuracy", -1) - 0.9858603568657874) > 1e-12:
+            errors.append("CLASH published Jev reference mismatch")
+    return errors
+
+
 def audit_additional_benchmarks(final: Path, root: Path, errors: list[str]) -> None:
     expected_model = "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
     manifest_path = final / "release/MANIFEST.json"
@@ -187,15 +209,21 @@ def audit_additional_benchmarks(final: Path, root: Path, errors: list[str]) -> N
                 if abs(metrics["jev_accuracy"] - reference[dataset]["accuracy"]) > 1e-12: errors.append(f"BTZSC Jev reference mismatch: {dataset}")
             if summary.get("dataset_revision") != "fef2a2ac62b69c58670047dddf045c53d7c3cb5e": errors.append("BTZSC dataset revision mismatch")
         elif name == "code-review":
-            raw = urlopen(f"https://raw.githubusercontent.com/gemanor/jev-code-review-benchmark/{summary.get('benchmark_revision')}/docs/results/decisions.csv", timeout=120).read()
-            if __import__("hashlib").sha256(raw).hexdigest() != summary.get("reference_csv_sha256"): errors.append("code-review reference CSV hash mismatch")
+            revision = "95932b43f227dc759a7147d4e2d371388a148eb8"
+            if summary.get("benchmark_revision") != revision or summary.get("reference_csv_sha256") != "699e63df6c976c68176fcbc1594ba798ff005a5ac5559571e67710124eb44ed2": errors.append("code-review pinned revision/reference hash mismatch")
+            raw = urlopen(f"https://raw.githubusercontent.com/gemanor/jev-code-review-benchmark/{revision}/docs/results/decisions.csv", timeout=120).read()
+            if __import__("hashlib").sha256(raw).hexdigest() != "699e63df6c976c68176fcbc1594ba798ff005a5ac5559571e67710124eb44ed2": errors.append("code-review reference CSV hash mismatch")
             ref = [r for r in csv.DictReader(io.StringIO(raw.decode())) if r["model"] == "jev" and r["condition"] == "primary"]
             if abs(sum(r["correct"] == "True" for r in ref)/len(ref) - summary["metrics"]["jev_accuracy"]) > 1e-12: errors.append("code-review Jev reference mismatch")
+            source_expected = {(r["case_id"], r["rule"]): r["expected"] for r in ref}
+            for row in rows: row["_source_expected"] = source_expected.get((row["case_id"], row["rule"]))
+            if any(row["_source_expected"] is None for row in rows): errors.append("code-review row absent from pinned source decisions")
         elif name == "clash":
             raw = urlopen(summary["source_url"], timeout=120).read()
             if __import__("hashlib").sha256(raw).hexdigest() != summary.get("source_sha256"): errors.append("CLASH source download hash mismatch")
             samples = json.loads(raw)["samples"]
             if len(samples) != len(rows) or any(rows[i]["image_id"] != sample["image_id"] for i, sample in enumerate(samples)): errors.append("CLASH rows do not match pinned source order")
+        errors.extend(validate_new_row_semantics(name, summary, rows))
 
 
 def main():
