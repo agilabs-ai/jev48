@@ -1,6 +1,7 @@
 # Jev48 release state
 
-Prepared privately for AGI Labs. Nothing in this release state is public yet.
+The AGI Labs source repository is public. The model checkpoint remains staged
+privately because the AGI Labs Hugging Face namespace is not authenticated here.
 
 ## Destinations
 
@@ -17,15 +18,13 @@ Prepared privately for AGI Labs. Nothing in this release state is public yet.
 - Model SHA-256: `20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec`
 - Complete private manifest: `jev48-1789867911/release/MANIFEST.json`
 
-## Publication hold
+## Remaining model publication hold
 
-Before public visibility:
+Before making the model checkpoint public:
 
-1. obtain PASS verdicts from engineering, methodology, and launch judges;
-2. authenticate the AGI Labs Hugging Face namespace;
-3. upload privately, re-download by immutable commit, verify every hash, and run inference;
-4. agree on launch/post copy and receive explicit publication authorization;
-5. make repository/model/page public in that order and verify final URLs;
-6. create `v1.0.0` only after all public artifacts resolve.
+1. authenticate the AGI Labs Hugging Face namespace;
+2. upload privately, re-download by immutable commit, verify every hash, and run inference;
+3. make the model public and verify the final URL;
+4. create `v1.0.0` only after all intended public artifacts resolve.
 
-No public upload or visibility change is authorized by this preparation step.
+The source repository is already public at https://github.com/agilabs-ai/jev48.

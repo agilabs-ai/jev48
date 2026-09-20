@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import json
 from pathlib import Path
 import re
 import sys
+from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -14,6 +17,7 @@ if str(ROOT) not in sys.path:
 from jev48.decider_bridge import DECIDER_COMMIT, DECIDER_MODEL, DECIDER_MODEL_REVISION
 from jev48.mtbench import MTBENCH_REVISION
 from jev48.typed_decisions import REVISION as TYPED_DECISIONS_REVISION
+from jev48.benchmark_metrics import binary_metrics, paired_cluster_bootstrap_delta
 from scripts.verify_release_bundle import verify as verify_release_bundle
 
 
@@ -43,6 +47,101 @@ def scan_secrets(root: Path):
                 hits.append(str(path.relative_to(root)))
                 break
     return hits
+
+
+def sha256(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def audit_additional_benchmarks(final: Path, root: Path, errors: list[str]) -> None:
+    expected_model = "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+    manifest_path = final / "release/MANIFEST.json"
+    manifest_sha = sha256(manifest_path)
+    specs = {
+        "phishing": (2000, root / "scripts/benchmark_phishing.py", "2f3ba4403672443ab407414119e7cc83c9845933", "579b3b34ebf94b962360e87de78b8f3c93955abb00891a535659ba54d63b9adc"),
+        "jevbench": (231, root / "scripts/benchmark_jevbench_public.py", "c85fa24c8e6aece2dc5bfb1badc9ca3f844f7acf", "48a8fcf0bf840fc0ba8e5afb8570dd50a6d866f164a0e61e9da0e9f05249050c"),
+    }
+    loaded = {}
+    for name, (count, script, commit, script_digest) in specs.items():
+        summary_path = final / f"results/public/{name}.summary.json"
+        predictions_path = final / f"results/public/{name}.jsonl"
+        if not summary_path.exists() or not predictions_path.exists():
+            errors.append(f"missing {name} summary or predictions")
+            continue
+        summary = json.loads(summary_path.read_text())
+        rows = [json.loads(line) for line in predictions_path.read_text().splitlines() if line]
+        loaded[name] = (summary, rows)
+        if len(rows) != count or len({row.get("id") for row in rows}) != count:
+            errors.append(f"{name} predictions are incomplete or contain duplicate IDs")
+        provenance = summary.get("model", {})
+        if provenance.get("sha256") != expected_model or provenance.get("release_manifest_sha256") != manifest_sha:
+            errors.append(f"{name} model/release provenance mismatch")
+        if provenance.get("run_name") != "jev48-1789867911" or provenance.get("repo_commit") != commit:
+            errors.append(f"{name} run/code provenance is incomplete")
+        if provenance.get("script_sha256") != script_digest or sha256(script) != script_digest:
+            errors.append(f"{name} script hash does not match the benchmark receipt")
+    if "phishing" in loaded:
+        summary, rows = loaded["phishing"]
+        raw = urlopen(summary["dataset_url"], timeout=120).read()
+        if __import__("hashlib").sha256(raw).hexdigest() != "cebb407ff8630491a97400e37464b8db8dfc4299164fca51fcb4ac7eec8204ef":
+            errors.append("phishing source download hash mismatch")
+            expected = {}
+        else:
+            expected = {r["id"]: int(r["phish_label"]) for r in csv.DictReader(io.StringIO(raw.decode("utf-8")))}
+        if any(expected.get(r["id"]) != r["y"] for r in rows) or set(expected) != {r["id"] for r in rows}:
+            errors.append("phishing prediction IDs/labels do not match pinned source")
+        got = binary_metrics((r["y"] for r in rows), (r["phishing_probability"] for r in rows))
+        for key in ("accuracy", "recall", "false_positive_rate", "auroc", "ece_10", "brier"):
+            if abs(float(got[key]) - float(summary["metrics"][key])) > 1e-12:
+                errors.append(f"phishing metric mismatch: {key}")
+        if summary.get("dataset_revision") != "89afcc39610084298c4679159cb2e27d9ffffa46" or summary.get("dataset_sha256") != "cebb407ff8630491a97400e37464b8db8dfc4299164fca51fcb4ac7eec8204ef":
+            errors.append("phishing dataset pin/hash mismatch")
+        if summary.get("jev_reference", {}).get("evidence_sha256") != "8beb3f727dd48adc5163c398e73fae639bcc6eec568cfa1e243331843b334e69":
+            errors.append("phishing Jev reference evidence mismatch")
+    if "jevbench" in loaded:
+        summary, rows = loaded["jevbench"]
+        revision = "e105a48f8cdb7f3babb3594424f73e5d7bdc97b9"
+        expected_hashes = {
+            "datasets/public/easy.jsonl": "231df3c2c8e88a1a8c137ebe85de96ba70fabd330849098ac7b3c52c70b7172b",
+            "datasets/public/original.jsonl": "5c2414edb3006b8bfcb70fda433f0f9ca015759433849f8d3104328a1f7c4180",
+            "datasets/public/hard.jsonl": "89e9e6becb33ed88c1de7d42dcc87531b2fb64cfaef4e1986faf7c37b3f80ebb",
+            "results/v1.2/jevbench-v1.2-per-task.json": "0a8146ea994807b943b663edb34c0fdc05d35c702f9dfc792006f0edf30cbc7b",
+        }
+        if summary.get("file_sha256") != expected_hashes:
+            errors.append("JevBench source hash map mismatch")
+        tasks = {}
+        evidence = None
+        for path, digest in expected_hashes.items():
+            raw = urlopen(f"https://raw.githubusercontent.com/fstandhartinger/jevbench/{revision}/{path}", timeout=120).read()
+            if __import__("hashlib").sha256(raw).hexdigest() != digest:
+                errors.append(f"JevBench source download hash mismatch: {path}")
+                continue
+            if path.endswith(".jsonl"):
+                tier = Path(path).stem
+                for line in raw.decode().splitlines():
+                    item = json.loads(line)
+                    tasks[item["id"]] = (item["expected"], item["family"], tier)
+            else:
+                evidence = json.loads(raw)
+        jev_outcomes = dict(evidence["systems"]["jev-1.13.0"]["public_tasks"]) if evidence else {}
+        if set(tasks) != {r["id"] for r in rows} or set(jev_outcomes) != set(tasks):
+            errors.append("JevBench prediction/source ID mismatch")
+        for r in rows:
+            source = tasks.get(r["id"])
+            outcome = jev_outcomes.get(r["id"])
+            if not source or str(source[0]) != str(r["expected"]) or source[1:] != (r["family"], r["tier"]) or not outcome or (outcome[0] == "c") != r["jev_correct"] or outcome[0] != r["jev_outcome"]:
+                errors.append(f"JevBench row provenance mismatch: {r['id']}")
+                break
+        ours = sum(bool(r["correct"]) for r in rows) / len(rows)
+        jev = sum(bool(r["jev_correct"]) for r in rows) / len(rows)
+        if abs(ours - summary["metrics"]["jev48_accuracy"]) > 1e-12 or abs(jev - summary["metrics"]["jev_accuracy"]) > 1e-12:
+            errors.append("JevBench aggregate accuracy mismatch")
+        delta = paired_cluster_bootstrap_delta((r["correct"] for r in rows), (r["jev_correct"] for r in rows), (r["family"] for r in rows))
+        if delta != summary["metrics"]["paired_delta"]:
+            errors.append("JevBench paired cluster bootstrap mismatch")
+        if summary.get("benchmark_revision") != "e105a48f8cdb7f3babb3594424f73e5d7bdc97b9":
+            errors.append("JevBench revision mismatch")
 
 
 def main():
@@ -106,6 +205,7 @@ def main():
                         errors.append("public comparison is incomplete")
                     if len({row.get("id") for row in rows}) != len(rows):
                         errors.append("public comparison contains duplicate case IDs")
+            audit_additional_benchmarks(final, root, errors)
 
     if bool(args.release_bundle) != bool(args.release_manifest):
         errors.append("release bundle and manifest must be supplied together")

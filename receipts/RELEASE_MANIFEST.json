@@ -1,0 +1,100 @@
+{
+  "base_model": "Mapika/decider-2b",
+  "base_model_revision": "4a0e86782adfdb7393e04b8ec9f6b939dca09273",
+  "files": [
+    {
+      "bytes": 10745,
+      "path": "LICENSE",
+      "sha256": "8489ebe7c8abe903fcdaace4080ef1660bba98ea44c8007923bfb91777945e37"
+    },
+    {
+      "bytes": 3950,
+      "path": "README.md",
+      "sha256": "657d512b0ae7388c82018bcbf71c67c19e6ea9edf0684074123fd10834d09a34"
+    },
+    {
+      "bytes": 2828,
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "06ded0a0c89f15846f37809cbb456f82a4ee0d9f149a523a5f99517105a751d4"
+    },
+    {
+      "bytes": 7755,
+      "path": "chat_template.jinja",
+      "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+    },
+    {
+      "bytes": 1790,
+      "path": "config.json",
+      "sha256": "6cb8daca9fb653c61485ff7452fc068bacd5c27cbee659ecd24b47186b0d1b52"
+    },
+    {
+      "bytes": 674,
+      "path": "decider_config.json",
+      "sha256": "81895cb02a3860afb3e851b30176393282b609dc701762a862f5eb56c82a4e00"
+    },
+    {
+      "bytes": 116,
+      "path": "generation_config.json",
+      "sha256": "62153eb6c69f2e1f426beaa8002b7186437e949c7588167085df14e10e9c0a73"
+    },
+    {
+      "bytes": 3763692048,
+      "path": "model.safetensors",
+      "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+    },
+    {
+      "bytes": 437,
+      "path": "receipts/MODEL_SOURCE.json",
+      "sha256": "14062024281614f5fb6b58e9474db3f0af3d60f77f93613fa1143117f10458cb"
+    },
+    {
+      "bytes": 415,
+      "path": "receipts/SMOKE_TEST.json",
+      "sha256": "c3e156f74f85fd473f4b026f422aa19394dd2b243496ba3e768c3703b9f1280d"
+    },
+    {
+      "bytes": 53340,
+      "path": "receipts/base.calibrated.summary.json",
+      "sha256": "e1a197eeb988c576ddbb2e86e9787432c77db50334565678ec07027dbcc3f41d"
+    },
+    {
+      "bytes": 1038,
+      "path": "receipts/bootstrap-jev48-vs-base.json",
+      "sha256": "7bce3f2263415b337e62b28aa251ab74b8df11f07a87d38a0a1f1863e20bb34c"
+    },
+    {
+      "bytes": 53385,
+      "path": "receipts/jev48.calibrated.summary.json",
+      "sha256": "230f6709357978ee0694de7500138eb1f935530d1646c05ad47fc4d4d850cc37"
+    },
+    {
+      "bytes": 16392,
+      "path": "receipts/run_manifest.json",
+      "sha256": "dcfd7a109dc57273454ab52e0b93d40ab2e970d64460bf08402cbc20dd7d83a5"
+    },
+    {
+      "bytes": 14470,
+      "path": "receipts/selection.json",
+      "sha256": "c9c8036f21994c0185ef5ce93f980367d7919a592d8a5177bf56d33e426b1065"
+    },
+    {
+      "bytes": 932,
+      "path": "receipts/typed-decisions.summary.json",
+      "sha256": "9def3fa16b6e6208151f8c880f947718c2a88831d4a9be6094de30dd0e685993"
+    },
+    {
+      "bytes": 19989325,
+      "path": "tokenizer.json",
+      "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+    },
+    {
+      "bytes": 1127,
+      "path": "tokenizer_config.json",
+      "sha256": "171ecbe7ddae98d11840698f7df2b8d5b4722139db0f0620d3bbf429bd656250"
+    }
+  ],
+  "release": "agilabs-ai/jev48-2b",
+  "run_name": "jev48-1789867911",
+  "upstream_commit": "b08acf787d5d1f718a8c36c4677960f43772c7be",
+  "visibility_at_staging": "private/not-uploaded"
+}

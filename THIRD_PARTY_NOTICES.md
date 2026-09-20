@@ -55,6 +55,36 @@ License text: [`licenses/Apache-2.0.txt`](licenses/Apache-2.0.txt)
 
 “Jev” is used descriptively as the closed target/reference system. Jev48 is independent and not affiliated with TypeSafe.
 
+## JevBench
+
+Independent decision benchmark, revision
+`e105a48f8cdb7f3babb3594424f73e5d7bdc97b9`. Jev48 evaluates all 231 public
+tasks (48 easy, 72 original, 111 hard) and compares against source-published Jev
+1.13.0 outcomes. JevBench's MIT grant expressly covers its harness and 72 original
+decisions only; its other public tasks retain their respective source terms.
+Consequently Jev48 publishes aggregate summaries, source hashes, and code—not task
+state/question text or row-level expected labels/families for the other 159 tasks.
+It does not claim a score on the benchmark's private tasks.
+
+Source: https://github.com/fstandhartinger/jevbench/tree/e105a48f8cdb7f3babb3594424f73e5d7bdc97b9
+
+## PhishNChips v5.2 and jev-phishing-bench
+
+PhishNChips v5.2 declares `license: other` and carries mixed source-specific
+terms: project-generated synthetic content is MIT; Nazario and parts of the GitHub
+Phishing Database are CC BY 4.0; OpenPhish URLs have academic-research permission;
+PhishTank URLs follow its terms; and Tranco seeds require research attribution.
+The pinned `SOURCE_LICENSES.md` is redistributed in `receipts/upstream/`.
+
+Jev48 publishes only case IDs, binary labels, its own probabilities, and timings—
+not email bodies or URLs. It uses the exact nine-question request from
+`jev-phishing-bench` at commit
+`1d56e8c64d029a9554a0874e2ef2901ed196e230`. Jev's comparison row is aggregate
+and unpaired because its row-level predictions were not published.
+
+Sources: https://huggingface.co/datasets/AreLit/PhishNChips and
+https://github.com/anisselbd/jev-phishing-bench/tree/1d56e8c64d029a9554a0874e2ef2901ed196e230
+
 ## Mixed transfer and replay sources
 
 The pinned Mapika registry loads 17 transfer tasks and four replay/regression tasks.

@@ -1,0 +1,124 @@
+{
+  "benchmark": "JevBench v1.2.2 public tasks",
+  "benchmark_revision": "e105a48f8cdb7f3babb3594424f73e5d7bdc97b9",
+  "comparison": "paired per-task correctness against source-published Jev outcomes using native question types; public subset only, not the 534-task leaderboard score",
+  "file_sha256": {
+    "datasets/public/easy.jsonl": "231df3c2c8e88a1a8c137ebe85de96ba70fabd330849098ac7b3c52c70b7172b",
+    "datasets/public/hard.jsonl": "89e9e6becb33ed88c1de7d42dcc87531b2fb64cfaef4e1986faf7c37b3f80ebb",
+    "datasets/public/original.jsonl": "5c2414edb3006b8bfcb70fda433f0f9ca015759433849f8d3104328a1f7c4180",
+    "results/v1.2/jevbench-v1.2-per-task.json": "0a8146ea994807b943b663edb34c0fdc05d35c702f9dfc792006f0edf30cbc7b"
+  },
+  "mean_latency_ms": 279.37319129004277,
+  "metrics": {
+    "by_tier": {
+      "easy": {
+        "jev48_accuracy": 1.0,
+        "jev48_accuracy_wilson_ci95": [
+          0.9258998703338824,
+          0.9999999999999999
+        ],
+        "jev_accuracy": 1.0,
+        "jev_accuracy_wilson_ci95": [
+          0.9258998703338824,
+          0.9999999999999999
+        ],
+        "n": 48,
+        "paired_delta": {
+          "bootstrap_samples": 10000,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "cluster_field": "family",
+          "delta": 0.0,
+          "n": 48,
+          "n_clusters": 4,
+          "seed": 48
+        }
+      },
+      "hard": {
+        "jev48_accuracy": 0.45045045045045046,
+        "jev48_accuracy_wilson_ci95": [
+          0.36109608671838495,
+          0.5431196894224019
+        ],
+        "jev_accuracy": 0.7297297297297297,
+        "jev_accuracy_wilson_ci95": [
+          0.6404595664697532,
+          0.8036309259684178
+        ],
+        "n": 111,
+        "paired_delta": {
+          "bootstrap_samples": 10000,
+          "ci95": [
+            -0.3974358974358974,
+            -0.15093965259059602
+          ],
+          "cluster_field": "family",
+          "delta": -0.27927927927927926,
+          "n": 111,
+          "n_clusters": 10,
+          "seed": 48
+        }
+      },
+      "original": {
+        "jev48_accuracy": 0.875,
+        "jev48_accuracy_wilson_ci95": [
+          0.7791894627583916,
+          0.9328221577942649
+        ],
+        "jev_accuracy": 0.9861111111111112,
+        "jev_accuracy_wilson_ci95": [
+          0.9254339785252386,
+          0.9975440481170943
+        ],
+        "n": 72,
+        "paired_delta": {
+          "bootstrap_samples": 10000,
+          "ci95": [
+            -0.2222222222222222,
+            -0.013888888888888888
+          ],
+          "cluster_field": "family",
+          "delta": -0.11111111111111116,
+          "n": 72,
+          "n_clusters": 6,
+          "seed": 48
+        }
+      }
+    },
+    "jev48_accuracy": 0.696969696969697,
+    "jev48_accuracy_wilson_ci95": [
+      0.634882047562172,
+      0.7526134162157133
+    ],
+    "jev_accuracy": 0.8658008658008658,
+    "jev_accuracy_wilson_ci95": [
+      0.8158127037076494,
+      0.9038217290227087
+    ],
+    "n": 231,
+    "paired_delta": {
+      "bootstrap_samples": 10000,
+      "ci95": [
+        -0.2608695652173913,
+        -0.08571428571428572
+      ],
+      "cluster_field": "family",
+      "delta": -0.16883116883116878,
+      "n": 231,
+      "n_clusters": 18,
+      "seed": 48
+    }
+  },
+  "mode": "native JevBench question types on all 231 public tasks; no benchmark rows used in Jev48 fine-tuning or model selection; no favorable subset selection",
+  "model": {
+    "path": "/tmp/jev48/selected-model",
+    "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
+    "repo_commit": "c85fa24c8e6aece2dc5bfb1badc9ca3f844f7acf",
+    "run_name": "jev48-1789867911",
+    "script_sha256": "48a8fcf0bf840fc0ba8e5afb8570dd50a6d866f164a0e61e9da0e9f05249050c",
+    "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+  },
+  "runtime_seconds": 84.837814643
+}

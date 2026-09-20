@@ -1,0 +1,52 @@
+{
+  "benchmark": "PhishNChips v5.2 / jev-phishing-bench verdict",
+  "dataset_revision": "89afcc39610084298c4679159cb2e27d9ffffa46",
+  "dataset_sha256": "cebb407ff8630491a97400e37464b8db8dfc4299164fca51fcb4ac7eec8204ef",
+  "dataset_url": "https://huggingface.co/datasets/AreLit/PhishNChips/resolve/89afcc39610084298c4679159cb2e27d9ffffa46/core_emails.csv",
+  "jev_reference": {
+    "accuracy": 0.626,
+    "accuracy_ci95": [
+      0.6045711453178447,
+      0.6469457410468261
+    ],
+    "auroc": 0.6885385,
+    "auroc_ci95": [
+      0.6666893911680324,
+      0.7109252895727851
+    ],
+    "comparison": "same dataset, object state, nine-question batch, and headline verdict wording; aggregate/unpaired because Jev row-level outputs are not public; no confidence interval for the cross-system difference",
+    "ece_10": 0.15361,
+    "evidence_path": "results/metrics.json",
+    "evidence_sha256": "8beb3f727dd48adc5163c398e73fae639bcc6eec568cfa1e243331843b334e69",
+    "false_positive_rate": 0.18,
+    "model": "Jev 1.13.0",
+    "n": 2000,
+    "recall": 0.432
+  },
+  "mean_latency_ms": 57.54631534749986,
+  "metrics": {
+    "accuracy": 0.5005,
+    "accuracy_wilson_ci95": [
+      0.47860700315257176,
+      0.5223910798001468
+    ],
+    "auroc": 0.76912,
+    "brier": 0.48575176640499995,
+    "ece_10": 0.49007095,
+    "false_positive_rate": 0.0,
+    "n": 2000,
+    "recall": 0.001
+  },
+  "mode": "exact published nine-question request and object state; no benchmark rows used in Jev48 fine-tuning or model selection",
+  "model": {
+    "path": "/tmp/jev48/selected-model",
+    "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
+    "repo_commit": "2f3ba4403672443ab407414119e7cc83c9845933",
+    "run_name": "jev48-1789867911",
+    "script_sha256": "579b3b34ebf94b962360e87de78b8f3c93955abb00891a535659ba54d63b9adc",
+    "sha256": "20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec"
+  },
+  "runtime_seconds": 133.04414645900002,
+  "source_benchmark": "https://github.com/anisselbd/jev-phishing-bench",
+  "source_benchmark_commit": "1d56e8c64d029a9554a0874e2ef2901ed196e230"
+}
