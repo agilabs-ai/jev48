@@ -30,6 +30,8 @@ def main():
   '<a class="btn" href="https://github.com/agilabs-ai/jev48/blob/main/BENCHMARK_REGISTRY.md">Eligibility registry ↗</a>',
   '<a class="btn" href="https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0">Download model ↗</a><a class="btn" href="https://github.com/agilabs-ai/jev48/blob/main/BENCHMARK_REGISTRY.md">Eligibility registry ↗</a>'
  )
+ html_doc=html_doc.replace("https://github.com/agilabs-ai/jev48", "https://github.com/edgelabs-ai/jev48")
+ html_doc=html_doc.replace("AGI Labs", "Edge Labs AI").replace(">agi labs<", ">edge labs<")
  out=ROOT/"site/jev48/index.html"; out.parent.mkdir(parents=True,exist_ok=True); out.write_text(html_doc,encoding="utf-8")
  (out.parent/"benchmark-ranking.png").write_bytes((ROOT/"launch/benchmark-ranking.png").read_bytes())
  print(out)

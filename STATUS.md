@@ -31,13 +31,12 @@
 - successful H200 list-price estimate: $2.87;
 - live Jev outputs used for training or selection: 0.
 
-## Remaining model publication gate
+## Public model release
 
-The source repository and safe aggregate receipts are public at
-https://github.com/agilabs-ai/jev48. The Hugging Face checkpoint remains private /
-not uploaded until the AGI Labs namespace is authenticated, the upload is
-re-downloaded by immutable revision, every hash is verified, and inference passes.
-Mixed-source row-level data remains withheld.
+The source repository, safe aggregate receipts, and hash-verified checkpoint are
+public at https://github.com/edgelabs-ai/jev48. The checkpoint is distributed as
+split assets in release `v1.0.0`; `MODEL_CARD.md` verifies each part and the final
+reassembled model hash. Mixed-source row-level data remains withheld.
 
 Do not describe the public Jev row as paired or as a run on Jev48's original benchmark.
 The allowed comparison is the explicitly labeled independent aggregate in `RESULTS_PUBLIC.md`.

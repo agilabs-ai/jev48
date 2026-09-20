@@ -81,7 +81,7 @@ def stage(run_name: str) -> dict:
     for path in sorted(p for p in model.rglob("*") if p.is_file()):
         files.append({"path": str(path.relative_to(model)), "bytes": path.stat().st_size, "sha256": sha256(path)})
     manifest = {
-        "release": "agilabs-ai/jev48-2b",
+        "release": "edgelabs-ai/jev48@v1.0.0",
         "visibility_at_staging": "private/not-uploaded",
         "run_name": run_name,
         "upstream_commit": DECIDER_COMMIT,

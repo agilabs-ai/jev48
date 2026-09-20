@@ -59,8 +59,9 @@ def main():
 </main></body></html>'''
     body = body.replace(
         "https://huggingface.co/agilabs-ai/jev48-2b",
-        "https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0",
+        "https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0",
     )
+    body = body.replace("https://github.com/agilabs-ai/jev48", "https://github.com/edgelabs-ai/jev48")
     out = Path(args.output); out.parent.mkdir(parents=True, exist_ok=True); out.write_text(body, encoding="utf-8")
     print(out)
 

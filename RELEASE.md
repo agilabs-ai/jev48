@@ -4,8 +4,8 @@ The AGI Labs source repository and verified model checkpoint are public.
 
 ## Destinations
 
-- Source and launch page: `agilabs-ai/jev48`
-- Model checkpoint: https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0
+- Source and launch page: `edgelabs-ai/jev48`
+- Model checkpoint: https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0
 - Release version: `v1.0.0`
 
 ## Frozen artifacts
@@ -23,4 +23,4 @@ The release carries a configuration archive, two weight parts, and `SHA256SUMS`.
 Follow [`MODEL_CARD.md`](MODEL_CARD.md) to verify the parts, reassemble the exact
 3,763,692,048-byte `model.safetensors`, and verify its frozen SHA-256 before loading.
 
-Source and checkpoint are public at https://github.com/agilabs-ai/jev48.
+Source and checkpoint are public at https://github.com/edgelabs-ai/jev48.

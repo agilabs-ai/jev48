@@ -102,7 +102,7 @@ python -m pip install '.[train]'
 ```
 
 Download and verify the split checkpoint assets from the public
-[`v1.0.0` release](https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0)
+[`v1.0.0` release](https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0)
 using the commands in the repository's `MODEL_CARD.md`.
 
 ```python
@@ -119,7 +119,7 @@ print(result["answers"]["choice"]["probabilities"])
 
 Input is a state string plus typed questions and candidate criteria. Output is a
 probability mapping over candidate IDs. CPU inference can use `device="cpu"` and
-`torch.float32`. The [published smoke receipt](https://github.com/agilabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
+`torch.float32`. The [published smoke receipt](https://github.com/edgelabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
 records the clean-environment test.
 
 ## Limitations
@@ -134,7 +134,7 @@ for consequential decisions without workload-specific validation.
 
 Jev48 code is MIT. This model derives from `Mapika/decider-2b`; preserve all applicable
 Apache-2.0 and underlying Qwen/model/dataset obligations. See
-[`agilabs-ai/jev48`](https://github.com/agilabs-ai/jev48) and `THIRD_PARTY_NOTICES.md`.
+[`edgelabs-ai/jev48`](https://github.com/edgelabs-ai/jev48) and `THIRD_PARTY_NOTICES.md`.
 """
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)

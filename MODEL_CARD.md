@@ -74,7 +74,7 @@ are split only to satisfy the release-asset size limit:
 
 ```bash
 mkdir jev48-2b && cd jev48-2b
-gh release download v1.0.0 --repo agilabs-ai/jev48 \
+gh release download v1.0.0 --repo edgelabs-ai/jev48 \
   --pattern 'model.safetensors.part-*' --pattern 'jev48-2b-config.tar.gz' \
   --pattern SHA256SUMS
 shasum -a 256 -c SHA256SUMS
@@ -97,7 +97,7 @@ print(result["answers"]["choice"]["probabilities"])
 
 Input is a state string plus typed questions and candidate criteria. Output is a
 probability mapping over candidate IDs. CPU inference can use `device="cpu"` and
-`torch.float32`. The [published smoke receipt](https://github.com/agilabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
+`torch.float32`. The [published smoke receipt](https://github.com/edgelabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
 records the clean-environment test.
 
 ## Limitations
@@ -112,4 +112,4 @@ for consequential decisions without workload-specific validation.
 
 Jev48 code is MIT. This model derives from `Mapika/decider-2b`; preserve all applicable
 Apache-2.0 and underlying Qwen/model/dataset obligations. See
-[`agilabs-ai/jev48`](https://github.com/agilabs-ai/jev48) and `THIRD_PARTY_NOTICES.md`.
+[`edgelabs-ai/jev48`](https://github.com/edgelabs-ai/jev48) and `THIRD_PARTY_NOTICES.md`.
