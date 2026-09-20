@@ -8,7 +8,7 @@ Finish **Jev48** end-to-end.
 
 The public experiment is:
 
-> **TypeSafe spent roughly two years building Jev. I gave ChatGPT one weekend and everything publicly available to see how close it could get.**
+> **Jev launched. I gave ChatGPT one weekend and everything publicly available to see how close it could get.**
 
 This is **not** a from-scratch challenge. Existing public code, weights, papers, datasets, and prior reproductions are allowed. ChatGPT already audited the public ecosystem and selected `Mapika/decider-2b` as the strongest practical starting point.
 
@@ -268,7 +268,7 @@ If the base won, **do not upload/rebrand the upstream weights**. Publish only th
 Create a release/tag only after final receipts are complete, e.g.:
 
 ```text
-v0.1.0
+v1.0.0
 ```
 
 Record final git SHA, Modal run name/ID, benchmark SHA-256, model source, and result-page path.
