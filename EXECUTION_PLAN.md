@@ -1,5 +1,8 @@
 # Execution plan
 
+> Historical pre-run plan. The run is complete; `RESULTS.md` and `RELEASE.md`
+> are authoritative.
+
 ## Stage 0 — complete
 
 - audited public Jev-like implementations;

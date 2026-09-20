@@ -29,10 +29,10 @@ run against Jev on Jev48's original frozen rows. Jev's row was measured and publ
 by the `LocalLLaMA/typed-decisions` maintainers; Jev48 was run separately on the exact
 pinned test split. Jev48 is evaluated zero-shot and used none of this benchmark's train rows.
 
-| Model | Kind | Accuracy ↑ | Soft acc ↑ | Brier ↓ | KL ↓ | ECE ↓ | Score MAE ↓ | Within 1 ↑ |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| TypeSafe Jev 1.13.0 | published general-model row | {jev['accuracy']:.3f} | {jev['soft_accuracy']:.3f} | {jev['brier']:.3f} | {jev['kl']:.3f} | {jev['ece_15']:.3f} | {jev['score_mae']:.3f} | {jev['within_one_level']:.3f} |
-| Jev48 / `soft-lr3e-6` | reproduced zero-shot general model | {ours['accuracy']:.3f} | {ours['soft_accuracy']:.3f} | {ours['brier']:.3f} | {ours['kl']:.3f} | {ours['ece_15']:.3f} | {ours['score_mae']:.3f} | {ours['within_one_level']:.3f} |
+| Model | Kind | Accuracy ↑ |
+|---|---|---:|
+| TypeSafe Jev 1.13.0 | source-published aggregate | {jev['accuracy']:.3f} |
+| Jev48 / `soft-lr3e-6` | reproduced zero-shot aggregate | {ours['accuracy']:.3f} |
 
 - Benchmark: `LocalLLaMA/typed-decisions` at `{receipt['benchmark_revision']}`.
 - Test size: {len(rows)} cases / {ours['n_decisions']} decisions.
@@ -40,9 +40,14 @@ pinned test split. Jev48 is evaluated zero-shot and used none of this benchmark'
 - Jev48 raw prediction SHA-256: `{raw_hash}`.
 - Public benchmark: https://huggingface.co/datasets/LocalLLaMA/typed-decisions
 
+The benchmark's gold distribution is the mean of three samples from a separate
+~4B teacher model. It therefore measures teacher agreement, not real-world
+correctness. The upstream card reports other metrics but ships no scorer code; they
+are preserved in the machine receipt but are not asserted as cross-system-comparable.
+
 ## Honest launch claim
 
-On this public zero-shot benchmark, Jev leads Jev48 by {(jev['accuracy'] - ours['accuracy']) * 100:.1f} percentage points in accuracy and also leads on Brier and score MAE. Jev48 has lower ECE and KL to the benchmark's soft targets. Those distribution metrics do not erase Jev's substantial accuracy lead.
+On this public zero-shot benchmark, Jev leads Jev48 by {(jev['accuracy'] - ours['accuracy']) * 100:.1f} percentage points in accuracy. This is descriptive: no paired Jev predictions are available for a significance test.
 """
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)

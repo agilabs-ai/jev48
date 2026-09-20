@@ -37,6 +37,7 @@ After auditing the emerging OSS ecosystem, ChatGPT selected [`Mapika/decider`](h
 repo:   Mapika/decider
 commit: b08acf787d5d1f718a8c36c4677960f43772c7be
 model:  Mapika/decider-2b
+weights revision: 4a0e86782adfdb7393e04b8ec9f6b939dca09273
 ```
 
 That choice is part of the experiment. A capable agent should use public prior art rather than deliberately reimplement it.
@@ -55,7 +56,7 @@ Conversation B preferred   0.20
 Tie                        0.20
 ```
 
-Then we compare, from the exact same base checkpoint:
+During development we compare, from the exact same base checkpoint:
 
 ```text
 hard-majority labels
@@ -63,7 +64,9 @@ vs.
 soft human-vote distributions
 ```
 
-Same model, same replay data, same loss family, same benchmark, same candidate-selection rules.
+Same model, replay data, loss family, benchmark, and candidate-selection rules. Only
+the selected soft-label winner was evaluated on locked rows, so the final locked
+result is not a causal hard-vs-soft ablation.
 
 ## Evaluation design
 
@@ -111,8 +114,9 @@ These are enforced in code:
 2. **Candidate selection reads dev only.**
 3. **Temperature is fitted after selection on calibration only.**
 4. **Locked `test` / `ood` are evaluated only after candidate selection.**
-5. **Jev, the public starting model, and Jev48 see identical frozen rows.**
-6. **Every benchmark file is hashed before live Jev is queried.**
+5. **The public starting model and Jev48 see identical frozen rows.** A future live
+   Jev run must use those same rows to qualify as paired.
+6. **Every benchmark file is hashed before any future live Jev query.**
 7. **If no fine-tune passes the predeclared dev gate, the public base remains the selected reproduction.** No forced win.
 8. **Starting code/weights and related work are disclosed.**
 

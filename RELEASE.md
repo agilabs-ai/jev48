@@ -21,11 +21,11 @@ Prepared privately for AGI Labs. Nothing in this release state is public yet.
 
 Before public visibility:
 
-1. agree on launch/post copy;
+1. obtain PASS verdicts from engineering, methodology, and launch judges;
 2. authenticate the AGI Labs Hugging Face namespace;
-3. upload the staged model bundle privately and verify its file hashes;
-4. make the GitHub repository and model public in the agreed order;
-5. enable the static result page and verify final public URLs;
-6. create the `v1.0.0` release/tag only after the public artifacts resolve.
+3. upload privately, re-download by immutable commit, verify every hash, and run inference;
+4. agree on launch/post copy and receive explicit publication authorization;
+5. make repository/model/page public in that order and verify final URLs;
+6. create `v1.0.0` only after all public artifacts resolve.
 
-The only unresolved prerequisite is Hugging Face authentication/namespace access.
+No public upload or visibility change is authorized by this preparation step.

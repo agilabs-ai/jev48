@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jev48"
-version = "0.1.0"
+version = "1.0.0"
 description = "Jev48: an auditable 48-hour attempt to reproduce Jev using public information and open models."
 requires-python = ">=3.11"
 dependencies = [

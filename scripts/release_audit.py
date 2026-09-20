@@ -11,9 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from jev48.decider_bridge import DECIDER_COMMIT, DECIDER_MODEL
+from jev48.decider_bridge import DECIDER_COMMIT, DECIDER_MODEL, DECIDER_MODEL_REVISION
 from jev48.mtbench import MTBENCH_REVISION
 from jev48.typed_decisions import REVISION as TYPED_DECISIONS_REVISION
+from scripts.verify_release_bundle import verify as verify_release_bundle
 
 
 SECRET_PATTERNS = [
@@ -48,6 +49,8 @@ def main():
     ap = argparse.ArgumentParser(description="Fail-closed Jev48 release audit.")
     ap.add_argument("--root", type=Path, default=Path("."))
     ap.add_argument("--final-results", type=Path, help="Path to downloaded Modal run; enables final receipt checks")
+    ap.add_argument("--release-bundle", type=Path)
+    ap.add_argument("--release-manifest", type=Path)
     args = ap.parse_args()
     root = args.root.resolve()
     errors = []
@@ -61,9 +64,10 @@ def main():
     pins = {
         "decider_commit": DECIDER_COMMIT,
         "decider_model": DECIDER_MODEL,
+        "decider_model_revision": DECIDER_MODEL_REVISION,
         "mtbench_revision": MTBENCH_REVISION,
     }
-    if len(DECIDER_COMMIT) != 40 or len(MTBENCH_REVISION) != 40:
+    if len(DECIDER_COMMIT) != 40 or len(DECIDER_MODEL_REVISION) != 40 or len(MTBENCH_REVISION) != 40:
         errors.append("upstream revisions are not immutable 40-char commits")
 
     final = None
@@ -102,6 +106,14 @@ def main():
                         errors.append("public comparison is incomplete")
                     if len({row.get("id") for row in rows}) != len(rows):
                         errors.append("public comparison contains duplicate case IDs")
+
+    if bool(args.release_bundle) != bool(args.release_manifest):
+        errors.append("release bundle and manifest must be supplied together")
+    elif args.release_bundle:
+        try:
+            verify_release_bundle(args.release_bundle, args.release_manifest)
+        except Exception as exc:
+            errors.append(f"release bundle verification failed: {exc}")
 
     result = {"ok": not errors, "pins": pins, "secret_hits": secret_hits, "errors": errors}
     print(json.dumps(result, indent=2, sort_keys=True))

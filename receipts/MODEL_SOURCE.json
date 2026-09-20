@@ -1,0 +1,10 @@
+{
+  "base_model": "Mapika/decider-2b",
+  "base_model_revision": "4a0e86782adfdb7393e04b8ec9f6b939dca09273",
+  "base_model_revision_evidence": "snapshot present in the persistent Modal HF cache used by the experiment",
+  "release_model_name": "jev48-2b",
+  "selected_model": "runs/soft-lr3e-6/model",
+  "selected_name": "soft-lr3e-6",
+  "upstream_commit": "b08acf787d5d1f718a8c36c4677960f43772c7be",
+  "upstream_repo": "Mapika/decider"
+}

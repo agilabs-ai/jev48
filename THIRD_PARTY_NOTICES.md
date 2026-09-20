@@ -8,6 +8,7 @@ Jev48's default starting model and implementation lineage.
 repo:   https://github.com/Mapika/decider
 commit: b08acf787d5d1f718a8c36c4677960f43772c7be
 model:  Mapika/decider-2b
+model revision: 4a0e86782adfdb7393e04b8ec9f6b939dca09273
 license: Apache-2.0
 ```
 
@@ -15,15 +16,41 @@ Jev48 does not claim the upstream architecture, base training corpus, inference 
 
 ## Qwen
 
-`decider-2b` is built on the Qwen model family. Preserve the applicable upstream model license/attribution.
+The Mapika model card identifies `Qwen/Qwen3.5-2B-Base` as its base and Apache-2.0
+as the applicable license. The exact Qwen revision used by Mapika was not disclosed;
+Jev48 does not invent one.
+
+Citation: Qwen Team, “Qwen3.5: Towards Native Multimodal Agents,” February 2026,
+https://qwen.ai/blog?id=qwen3.5
 
 ## MT-Bench / LMSYS
 
-Human judgment data is used for the controlled hard-vs-soft preference experiment. Preserve source license/citation and pinned revision in public data manifests.
+Dataset: `lmsys/mt_bench_human_judgments`, revision
+`ee34b9d273a7a35e4415c87678526c56c471098c`, CC BY 4.0. Jev48 modifies it by
+grouping expert votes, replacing one genuine empty response with an explicit marker,
+and assigning outcome-blind question-level splits. Mixed row-level derivatives are
+not redistributed in this release.
+
+Citation: Lianmin Zheng et al., “Judging LLM-as-a-Judge with MT-Bench and Chatbot
+Arena,” arXiv:2306.05685 (2023).
+
+## LocalLLaMA/typed-decisions
+
+Independent public comparison dataset, revision
+`ea9306458d6e9563628369a3d1e72e362fb381d2`, Apache-2.0. Jev48 evaluates the
+test split zero-shot and publishes aggregate results plus an unmodified snapshot of
+the source card. Its synthetic targets are means of teacher-model samples.
 
 ## TypeSafe Jev
 
 “Jev” is used descriptively as the closed target/reference system. Jev48 is independent and not affiliated with TypeSafe.
+
+## Mixed transfer and replay sources
+
+The pinned Mapika registry loads 17 transfer tasks and four replay/regression tasks.
+Their row-level combined derivative is withheld until every source's redistribution
+terms are individually audited. Public receipts contain only hashes, counts, source
+identifiers, and aggregate metrics.
 
 ## Other public prior art
 

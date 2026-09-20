@@ -1,0 +1,29 @@
+{
+  "counts": {
+    "dev": 516,
+    "final": 1300,
+    "mtbench_train": 1148,
+    "replay": 2000
+  },
+  "policy": {
+    "candidate_selection": "dev only",
+    "jev_outputs_used_for_training": false,
+    "jev_query_default": [
+      "calibration",
+      "test",
+      "ood"
+    ],
+    "locked_evaluation": [
+      "test",
+      "ood"
+    ],
+    "temperature_fit": "calibration only after candidate selection"
+  },
+  "sha256": {
+    "dev": "9b554f4e093c4d9b8bf3a6b91dfd638578578100766e2f4ffa7f0ab09e9d1817",
+    "final": "61a429af4502688f44d3d80a211f39282b6ff7ae9b78aac29fe1e7c029fe65a8",
+    "mtbench_train": "ba627c9bf8db29c82d0b12dc0ae07142b6913abc2a87b651658c555fb6b454b6",
+    "replay": "aca350d6583b9d2fbc0ff1fa8637418fef9403450c0f2f7347d230fabc44dd7e"
+  },
+  "version": "jev48-v1"
+}

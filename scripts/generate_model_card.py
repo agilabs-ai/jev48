@@ -36,13 +36,17 @@ This is an aggregate, unpaired comparison on `LocalLLaMA/typed-decisions`, not a
 live Jev run on Jev48's original rows. The benchmark maintainers published the
 Jev row; Jev48 ran separately, zero-shot, on the pinned test split.
 
-| Model | Accuracy ↑ | Brier ↓ | KL ↓ | ECE ↓ |
-|---|---:|---:|---:|---:|
-| TypeSafe Jev 1.13.0 (published) | {f(jev['accuracy'])} | {f(jev['brier'])} | {f(jev['kl'])} | {f(jev['ece_15'])} |
-| jev48-2b (zero-shot) | {f(ours['accuracy'])} | {f(ours['brier'])} | {f(ours['kl'])} | {f(ours['ece_15'])} |
+| Model | Accuracy ↑ |
+|---|---:|
+| TypeSafe Jev 1.13.0 (published) | {f(jev['accuracy'])} |
+| jev48-2b (zero-shot) | {f(ours['accuracy'])} |
 
-Benchmark revision: `{public['benchmark_revision']}`. Jev leads accuracy and Brier;
-Jev48 has lower reported KL and ECE.
+Benchmark revision: `{public['benchmark_revision']}`. Jev leads accuracy by
+{(jev['accuracy'] - ours['accuracy']) * 100:.1f} percentage points. The target is the
+mean of three samples from a separate teacher model, so this measures agreement with
+that synthetic teacher—not real-world correctness. Jev's row is unpaired and its
+scorer implementation is unavailable; no significance or distribution-metric parity
+is claimed.
 """
     text = f"""---
 license: apache-2.0
@@ -65,6 +69,7 @@ hard-majority preference labels while retaining replay data.
 ## Lineage
 
 - Starting model: `{source['base_model']}`
+- Starting model revision: `{source['base_model_revision']}`
 - Upstream repository: `{source['upstream_repo']}`
 - Upstream commit: `{source['upstream_commit']}`
 - Selected trial: `{sel['winner']['name']}`
@@ -85,6 +90,40 @@ Locked test/OOD were not used for selection. Jev outputs were not used for train
 
 Typed, generation-free decision scoring through the upstream `decider` interface.
 Validate calibration on your own outcome-labelled workload before consequential use.
+
+## Install and inference
+
+Tested with Python 3.12 on an NVIDIA L40S using bfloat16:
+
+```bash
+git clone https://github.com/Mapika/decider.git
+cd decider && git checkout {source['upstream_commit']}
+python -m pip install '.[train]'
+```
+
+```python
+import torch
+from decider.infer import Decider
+
+model = Decider("agilabs-ai/jev48-2b", device="cuda", dtype=torch.bfloat16,
+                temperature=None, use_graphs=False)
+questions = {{"choice": {{"type": "choice", "instructions": "Choose one.",
+             "criteria": {{"a": "Option A", "b": "Option B"}}}}}}
+result = model.system_one("Relevant state goes here.", questions, independent=True)
+print(result["answers"]["choice"]["probabilities"])
+```
+
+Input is a state string plus typed questions and candidate criteria. Output is a
+probability mapping over candidate IDs. CPU inference can use `device="cpu"` and
+`torch.float32`. The private release smoke receipt records the clean-environment test.
+
+## Limitations
+
+The preference result is small-sample; paired bootstrap uncertainty is published in
+the receipts. Only the winning soft-label trial was evaluated on locked rows, so the
+locked result is not a hard-vs-soft causal ablation. Calibration uses one pooled scalar
+temperature across heterogeneous tasks. Do not use this model as a factual oracle or
+for consequential decisions without workload-specific validation.
 
 ## Attribution and licenses
 

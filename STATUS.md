@@ -8,7 +8,7 @@
 - held-out transfer suite bridge;
 - replay/regression suite bridge;
 - empirical soft-target training objective;
-- hard-vs-soft controlled ablation;
+- hard-vs-soft development comparison;
 - dev-only candidate-selection gate;
 - identical post-hoc temperature fitting;
 - resumable TypeSafe Jev client;
@@ -18,7 +18,7 @@
 - local unit/integrity tests;
 - frozen H200 experiment and dev-only selection;
 - locked base-versus-Jev48 test/OOD evaluation;
-- persisted derivative checkpoint, raw predictions, manifests, and launch page;
+- persisted derivative checkpoint, private row-level predictions, manifests, and launch page;
 - final receipt audit with no secret hits.
 - zero-shot run on the pinned `LocalLLaMA/typed-decisions` public benchmark;
 - machine-generated aggregate comparison against its published Jev 1.13.0 row.
@@ -31,11 +31,12 @@
 - successful H200 list-price estimate: $2.87;
 - live Jev outputs used for training or selection: 0.
 
-## External work remaining
+## Remaining publication gate
 
-1. stage the complete public receipts and `jev48-2b` checkpoint for release;
-2. run the final release/license audit over the staged package;
-3. publish the repository, derivative, receipts, and measured result page when authorized.
+The package remains private until independent release judges pass it, the AGI Labs
+Hugging Face namespace is authenticated, the uploaded checkpoint is re-downloaded
+by immutable revision and smoke-tested, and Federico separately authorizes public
+visibility. Mixed-source row-level data is withheld pending per-source license audit.
 
 Do not describe the public Jev row as paired or as a run on Jev48's original benchmark.
 The allowed comparison is the explicitly labeled independent aggregate in `RESULTS_PUBLIC.md`.

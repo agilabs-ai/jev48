@@ -19,7 +19,7 @@ Primary public starting point:
 ```text
 Mapika/decider
 commit b08acf787d5d1f718a8c36c4677960f43772c7be
-weights Mapika/decider-2b
+weights Mapika/decider-2b revision 4a0e86782adfdb7393e04b8ec9f6b939dca09273
 ```
 
 The upstream architecture and released weights are not presented as Jev48 inventions.
@@ -90,7 +90,14 @@ ECE
 risk-coverage
 ```
 
-The final page is generated from machine-readable result JSON. Row-level outputs, benchmark hashes, training configs, selection receipts, and Modal artifacts are published alongside the headline.
+The final page is generated from machine-readable result JSON. Safe aggregate results,
+benchmark hashes, provenance, selection receipts, and the paired bootstrap are
+published. Mixed-source row-level inputs and predictions remain private pending a
+per-source redistribution audit. Complete artifacts remain preserved on Modal.
+
+The public Jev comparison is an unpaired, source-published aggregate. Its synthetic
+gold labels are teacher samples, and the source does not provide its scorer code.
+Only accuracy is used as a headline comparison; no paired significance claim is made.
 
 ## What would invalidate a headline
 

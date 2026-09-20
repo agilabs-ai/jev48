@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from pathlib import Path
 from typing import Any, Iterable
 
 from .schema import Candidate, DecisionExample
@@ -9,6 +10,17 @@ from .schema import Candidate, DecisionExample
 DECIDER_REPO = "Mapika/decider"
 DECIDER_COMMIT = "b08acf787d5d1f718a8c36c4677960f43772c7be"
 DECIDER_MODEL = "Mapika/decider-2b"
+DECIDER_MODEL_REVISION = "4a0e86782adfdb7393e04b8ec9f6b939dca09273"
+
+
+def resolve_model_snapshot(model: str = DECIDER_MODEL, revision: str = DECIDER_MODEL_REVISION) -> str:
+    """Resolve the public base to an immutable local Hugging Face snapshot."""
+    from huggingface_hub import snapshot_download
+
+    path = Path(snapshot_download(repo_id=model, revision=revision)).resolve()
+    if path.name != revision:
+        raise RuntimeError(f"resolved model snapshot mismatch: {path.name} != {revision}")
+    return str(path)
 
 # All are explicitly registered held-out/evaluation-only tasks in the pinned upstream.
 TRANSFER_TASKS = (

@@ -1,0 +1,45 @@
+{
+  "a": "Jev48",
+  "b": "decider-2b",
+  "by_split": {
+    "ood": {
+      "accuracy_difference_a_minus_b": {
+        "ci95": [
+          -0.014705882352941124,
+          -0.0014705882352941124
+        ],
+        "point": -0.007352941176470673
+      },
+      "brier_difference_a_minus_b": {
+        "ci95": [
+          -0.0016803493049093203,
+          0.010505490148741765
+        ],
+        "point": 0.004313832412239926
+      },
+      "n_clusters": 680,
+      "n_rows": 680
+    },
+    "test": {
+      "accuracy_difference_a_minus_b": {
+        "ci95": [
+          -0.008064516129032251,
+          0.0921052631578948
+        ],
+        "point": 0.03879310344827591
+      },
+      "brier_difference_a_minus_b": {
+        "ci95": [
+          -0.10025699656476102,
+          -0.020714490526960276
+        ],
+        "point": -0.059846811905607256
+      },
+      "n_clusters": 10,
+      "n_rows": 232
+    }
+  },
+  "interpretation": "positive accuracy difference favors A; negative Brier difference favors A",
+  "reps": 10000,
+  "seed": 48
+}

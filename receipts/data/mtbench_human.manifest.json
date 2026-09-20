@@ -1,0 +1,14 @@
+{
+  "examples": 1814,
+  "max_votes": 7,
+  "multi_vote_examples": 961,
+  "sha256": "06a72cebb9d5da53baee66db2d3c268f6ea479260e10be15a14017a25e958dad",
+  "source_revision": "ee34b9d273a7a35e4415c87678526c56c471098c",
+  "split_counts": {
+    "calibration": 218,
+    "dev": 216,
+    "test": 232,
+    "train": 1148
+  },
+  "split_seed": "jev48-mtbench-v1"
+}

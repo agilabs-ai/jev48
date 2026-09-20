@@ -1,0 +1,19 @@
+{
+  "device": "NVIDIA L40S",
+  "dtype": "bfloat16",
+  "ok": true,
+  "packages": {
+    "decider": "0.9.0",
+    "safetensors": "0.8.0",
+    "torch": "2.14.0",
+    "transformers": "5.17.0"
+  },
+  "probability_keys": [
+    "a",
+    "b"
+  ],
+  "probability_sum": 1.0,
+  "run_name": "jev48-1789858979",
+  "tested_utc": "2026-09-20T01:01:05.410044+00:00",
+  "upstream_commit": "b08acf787d5d1f718a8c36c4677960f43772c7be"
+}

@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parent
 APP_NAME = "jev48"
 DECIDER_COMMIT = "b08acf787d5d1f718a8c36c4677960f43772c7be"
 DECIDER_MODEL = "Mapika/decider-2b"
+DECIDER_MODEL_REVISION = "4a0e86782adfdb7393e04b8ec9f6b939dca09273"
 MODAL_GPU_REQUESTED = "H200"
 MODAL_GPU_USD_PER_SECOND = 0.001261  # Modal public list price checked 2026-09-19
 MODAL_PRICING_URL = "https://modal.com/pricing"
@@ -126,12 +127,12 @@ def benchmark_dev(work: Path, model: str, label: str) -> Path:
     return out
 
 
-def train_trial(work: Path, name: str, mode: str, lr: float) -> tuple[Path, Path]:
+def train_trial(work: Path, base_model: str, name: str, mode: str, lr: float) -> tuple[Path, Path]:
     out = Path("runs") / name
     run([
         "python", "scripts/train_decider_soft.py",
         "--data", "data/jev48_v1/mtbench_train.jsonl", "data/jev48_v1/replay.jsonl",
-        "--model", DECIDER_MODEL,
+        "--model", base_model,
         "--out", str(out),
         "--mode", mode,
         "--epochs", "2",
@@ -186,11 +187,13 @@ def experiment() -> dict:
     upstream_sha = subprocess.check_output(["git", "-C", "/opt/decider", "rev-parse", "HEAD"], text=True).strip()
     if upstream_sha != DECIDER_COMMIT:
         raise RuntimeError(f"upstream pin mismatch: {upstream_sha} != {DECIDER_COMMIT}")
+    from jev48.decider_bridge import resolve_model_snapshot
+    base_model_path = resolve_model_snapshot(DECIDER_MODEL, DECIDER_MODEL_REVISION)
     run(["python", "-m", "pytest", "-q"], work)
     run(["python", "scripts/release_audit.py"], work)
     build_data(work)
 
-    base_dev = benchmark_dev(work, DECIDER_MODEL, "base")
+    base_dev = benchmark_dev(work, base_model_path, "base")
     trials = [
         ("hard-lr1e-6", "hard", 1e-6),
         ("soft-lr3e-7", "soft", 3e-7),
@@ -199,7 +202,7 @@ def experiment() -> dict:
     ]
     candidates = []
     for name, mode, lr in trials:
-        model, pred = train_trial(work, name, mode, lr)
+        model, pred = train_trial(work, base_model_path, name, mode, lr)
         candidates.append((name, model, pred))
 
     selection_path = work / "results" / "selection.json"
@@ -215,7 +218,7 @@ def experiment() -> dict:
     selection = json.loads(selection_path.read_text(encoding="utf-8"))
     winner_model = selection["winner"]["model"]
 
-    _, base_cal = benchmark_final(work, DECIDER_MODEL, "base")
+    _, base_cal = benchmark_final(work, base_model_path, "base")
     if winner_model == DECIDER_MODEL:
         # Preserve a separate Jev48 receipt while making it explicit that the base survived selection.
         ours_raw = work / "results/final/jev48.raw.jsonl"
@@ -263,6 +266,7 @@ def experiment() -> dict:
         "selected_name": selection["winner"]["name"],
         "selected_model": winner_model,
         "base_model": DECIDER_MODEL,
+        "base_model_revision": DECIDER_MODEL_REVISION,
         "upstream_repo": "Mapika/decider",
         "upstream_commit": DECIDER_COMMIT,
     }, indent=2) + "\n", encoding="utf-8")
@@ -284,6 +288,7 @@ def experiment() -> dict:
         "repo_commit": repo_sha,
         "upstream_commit": upstream_sha,
         "base_model": DECIDER_MODEL,
+        "base_model_revision": DECIDER_MODEL_REVISION,
         "started_utc": started_utc,
         "ended_utc": datetime.now(timezone.utc).isoformat(),
         "elapsed_seconds": elapsed_seconds,
@@ -316,7 +321,7 @@ def experiment() -> dict:
         "elapsed_seconds": time.time() - started,
         "selection": selection,
         "final_report": (work / "results/final_report.md").read_text(encoding="utf-8"),
-        "base_source": {"repo": "Mapika/decider", "commit": DECIDER_COMMIT, "model": DECIDER_MODEL},
+        "base_source": {"repo": "Mapika/decider", "commit": DECIDER_COMMIT, "model": DECIDER_MODEL, "model_revision": DECIDER_MODEL_REVISION},
         "jev_queried": False,
     }
 

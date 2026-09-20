@@ -1,0 +1,41 @@
+{
+  "counts": {
+    "regression": 300,
+    "replay": 2000,
+    "transfer": 850
+  },
+  "data_quality": {
+    "selected_conflicting_duplicate_rows_preserved": {
+      "regression": 0,
+      "replay": 0,
+      "transfer": 0
+    },
+    "selected_duplicate_source_rows_collapsed": {
+      "regression": 3,
+      "replay": 231,
+      "transfer": 2
+    }
+  },
+  "sha256": {
+    "regression": "2e22f6a1cdd5bc77f6a1c37ec1736206a80396326d6a8f79679a696c1364c719",
+    "replay": "aca350d6583b9d2fbc0ff1fa8637418fef9403450c0f2f7347d230fabc44dd7e",
+    "transfer": "1a16921655885d88ea082a2e2e65c5c628d730a8faed2150865bf852a2565be4"
+  },
+  "split_counts": {
+    "regression": {
+      "dev": 300
+    },
+    "replay": {
+      "train": 2000
+    },
+    "transfer": {
+      "calibration": 170,
+      "ood": 680
+    }
+  },
+  "upstream": {
+    "commit": "b08acf787d5d1f718a8c36c4677960f43772c7be",
+    "model": "Mapika/decider-2b",
+    "repo": "Mapika/decider"
+  }
+}

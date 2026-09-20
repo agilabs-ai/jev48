@@ -1,0 +1,30 @@
+{
+  "benchmark": "LocalLLaMA/typed-decisions",
+  "benchmark_revision": "ea9306458d6e9563628369a3d1e72e362fb381d2",
+  "jev_reference": {
+    "accuracy": 0.727,
+    "brier": 0.148,
+    "ece_15": 0.144,
+    "kl": 1.442,
+    "median_case_latency_ms": 710,
+    "model": "TypeSafe Jev 1.13.0",
+    "score_mae": 0.391,
+    "soft_accuracy": 0.58,
+    "source": "published dataset card; aggregate only, not paired predictions",
+    "within_one_level": 0.952
+  },
+  "mean_case_latency_ms": 360.00868411499937,
+  "metrics": {
+    "accuracy": 0.577,
+    "brier": 0.2550600205649078,
+    "ece_15": 0.12011960552329101,
+    "kl": 0.496394474275373,
+    "n_decisions": 2000,
+    "score_mae": 0.4825184837653647,
+    "soft_accuracy": 0.5076182711496798,
+    "total_variation": 0.30626265646233386,
+    "within_one_level": 0.89875
+  },
+  "mode": "zero-shot general model; no typed-decisions training rows used",
+  "model": "/tmp/jev48/selected-model"
+}

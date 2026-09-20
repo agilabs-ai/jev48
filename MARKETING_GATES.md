@@ -28,9 +28,9 @@ The credential-free public comparison is aggregate and unpaired. Say that the
 separately on their pinned test split. Do not imply access to Jev's raw predictions or
 a Jev run on Jev48's original frozen benchmark.
 
-A strong result can also be:
+A result may be described only with its uncertainty and scope:
 
 - “got within X points of Jev”;
 - “the open public base was already surprisingly close”;
-- “soft human-vote training improved Brier by Y without hurting transfer”;
+- “the selected derivative improved preference Brier; transfer accuracy regressed slightly”;
 - “Jev kept a large transfer advantage.”

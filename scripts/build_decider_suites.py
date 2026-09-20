@@ -9,12 +9,20 @@ from pathlib import Path
 from jev48.decider_bridge import (
     DECIDER_COMMIT,
     DECIDER_MODEL,
+    DECIDER_MODEL_REVISION,
     DECIDER_REPO,
     build_regression_rows,
     build_replay_rows,
     build_transfer_rows,
 )
 from jev48.io import file_sha256, write_jsonl
+
+
+FROZEN_DEFAULT_SHA256 = {
+    "transfer": "1a16921655885d88ea082a2e2e65c5c628d730a8faed2150865bf852a2565be4",
+    "regression": "2e22f6a1cdd5bc77f6a1c37ec1736206a80396326d6a8f79679a696c1364c719",
+    "replay": "aca350d6583b9d2fbc0ff1fa8637418fef9403450c0f2f7347d230fabc44dd7e",
+}
 
 
 def main() -> None:
@@ -47,7 +55,7 @@ def main() -> None:
     write_jsonl(paths["regression"], regression)
     write_jsonl(paths["replay"], replay)
     manifest = {
-        "upstream": {"repo": DECIDER_REPO, "commit": DECIDER_COMMIT, "model": DECIDER_MODEL},
+        "upstream": {"repo": DECIDER_REPO, "commit": DECIDER_COMMIT, "model": DECIDER_MODEL, "model_revision": DECIDER_MODEL_REVISION},
         "counts": {k: len(v) for k, v in {"transfer": transfer, "regression": regression, "replay": replay}.items()},
         "split_counts": {
             "transfer": dict(Counter(x.split for x in transfer)),
@@ -65,7 +73,14 @@ def main() -> None:
             },
         },
         "sha256": {k: file_sha256(p) for k, p in paths.items()},
+        "source_revision_note": "The pinned Mapika registry does not disclose immutable revisions for every underlying dataset; default builds fail on frozen-output hash drift.",
     }
+    if (args.calibration_per_task, args.test_per_task, args.regression_per_task, args.replay_per_task) == (10, 40, 75, 500):
+        if manifest["sha256"] != FROZEN_DEFAULT_SHA256:
+            raise RuntimeError(
+                "underlying dataset output drifted from the audited frozen build; "
+                f"expected {FROZEN_DEFAULT_SHA256}, got {manifest['sha256']}"
+            )
     (args.out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(manifest, indent=2, sort_keys=True))
 

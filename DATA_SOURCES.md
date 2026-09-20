@@ -1,5 +1,11 @@
 # Jev48 data sources
 
+The Mapika registry commit is pinned, but it does not disclose immutable revisions
+for every underlying Hugging Face dataset. The default builder checks its three
+generated files against audited frozen SHA-256 values and fails on drift. This is an
+integrity guard, not a claim that every upstream source remains available. The mixed
+row-level derivative is withheld pending a per-source redistribution audit.
+
 ## Training / preference ablation
 
 ### MT-Bench human judgments

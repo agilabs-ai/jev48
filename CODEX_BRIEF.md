@@ -1,5 +1,7 @@
 # Codex Handoff — Finish and Publish Jev48
 
+> Historical execution brief. `README.md` and `RELEASE.md` are authoritative.
+
 ## Mission
 
 Finish **Jev48** end-to-end.

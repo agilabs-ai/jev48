@@ -1,5 +1,8 @@
 # ChatGPT build log
 
+> Historical build record. `README.md`, `RESULTS.md`, `STATUS.md`, and
+> `RELEASE.md` are authoritative.
+
 This file records the project decisions made inside the chat before external GPU execution.
 
 ## Phase 1 — naive independent reproduction

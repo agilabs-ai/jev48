@@ -1,5 +1,8 @@
 # Run Jev48 now
 
+> Historical operator note. Do not rerun paid training for release; see
+> `RELEASE.md` for the current verification path.
+
 ## 1. Local sanity
 
 ```bash
