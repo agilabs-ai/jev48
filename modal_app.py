@@ -23,6 +23,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 
@@ -187,6 +188,7 @@ def experiment() -> dict:
     upstream_sha = subprocess.check_output(["git", "-C", "/opt/decider", "rev-parse", "HEAD"], text=True).strip()
     if upstream_sha != DECIDER_COMMIT:
         raise RuntimeError(f"upstream pin mismatch: {upstream_sha} != {DECIDER_COMMIT}")
+    sys.path.insert(0, str(work))
     from jev48.decider_bridge import resolve_model_snapshot
     base_model_path = resolve_model_snapshot(DECIDER_MODEL, DECIDER_MODEL_REVISION)
     run(["python", "-m", "pytest", "-q"], work)

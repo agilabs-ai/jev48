@@ -207,7 +207,9 @@ This project is not the first open Jev-like implementation. See [`RELATED_WORK.m
 - razorback16/openjev
 - daseinlabs/open-jev
 
-The novelty claim here is deliberately narrow: **the 48-hour agent experiment, frozen direct comparison, and empirical human-vote probability supervision**, not invention of the System One model class.
+The novelty claim here is deliberately narrow: **the 48-hour agent experiment,
+frozen open-model evaluation, independent aggregate comparison, and empirical
+human-vote probability supervision**, not invention of the System One model class.
 
 ## License
 

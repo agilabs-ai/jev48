@@ -90,10 +90,17 @@ def main():
             f"| {r['model']} | {fmt(r['mtbench_accuracy'])} | {fmt(r['mtbench_brier'])} | {fmt(r['mtbench_ece'])} | "
             f"{fmt(r['transfer_accuracy'])} | {fmt(r['transfer_brier'])} | {fmt(r['transfer_ece'])} |"
         )
+    calibration_note = (
+        "The open base and Jev48 each receive one scalar temperature fitted on the same calibration rows. "
+        "No live Jev row exists in this report."
+        if not args.jev_native else
+        "The open base and Jev48 each receive one scalar temperature fitted on the same calibration rows. "
+        "Jev's primary row uses native provider probabilities; any extra Jev temperature fit is diagnostic."
+    )
     lines += [
         "",
         "Human preference = locked MT-Bench expert-vote groups over real model outputs. Transfer = pinned tasks held out by the public starting model's training registry.",
-        "The open base and Jev48 each receive one scalar temperature fitted on the same calibration rows. Jev's primary row uses the probabilities returned natively by the provider; any extra Jev temperature fit is retained only as a diagnostic.",
+        calibration_note,
         "Jev outputs are never used for training or candidate selection.",
         "",
     ]

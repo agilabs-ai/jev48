@@ -21,6 +21,7 @@
     "replay": "aca350d6583b9d2fbc0ff1fa8637418fef9403450c0f2f7347d230fabc44dd7e",
     "transfer": "1a16921655885d88ea082a2e2e65c5c628d730a8faed2150865bf852a2565be4"
   },
+  "source_revision_note": "The pinned Mapika registry does not disclose immutable revisions for every underlying dataset; default builds fail on frozen-output hash drift.",
   "split_counts": {
     "regression": {
       "dev": 300
@@ -36,6 +37,7 @@
   "upstream": {
     "commit": "b08acf787d5d1f718a8c36c4677960f43772c7be",
     "model": "Mapika/decider-2b",
+    "model_revision": "4a0e86782adfdb7393e04b8ec9f6b939dca09273",
     "repo": "Mapika/decider"
   }
 }

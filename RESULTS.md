@@ -1,15 +1,15 @@
 # Results
 
-The frozen Modal run `jev48-1789858979` selected `soft-lr3e-6` using development
+The frozen Modal run `jev48-1789867911` selected `soft-lr3e-6` using development
 rows only. Relative to the untouched base on the locked MT-Bench preference slice,
-Jev48 changed accuracy from 58.19% to 62.07% and Brier from 0.4708 to 0.4110.
+Jev48 changed accuracy from 58.19% to 62.07% and Brier from 0.4708 to 0.4111.
 
 | Locked slice | Metric delta (Jev48 − base) | 95% paired bootstrap interval |
 |---|---:|---:|
 | preference test | accuracy +0.0388 | −0.0081 to +0.0921 |
-| preference test | Brier −0.0598 | −0.1003 to −0.0207 |
+| preference test | Brier −0.0597 | −0.1000 to −0.0208 |
 | transfer OOD | accuracy −0.0074 | −0.0147 to −0.0015 |
-| transfer OOD | Brier +0.0043 | −0.0017 to +0.0105 |
+| transfer OOD | Brier +0.0044 | −0.0015 to +0.0105 |
 
 Negative Brier is better. Preference Brier improved clearly; preference accuracy is
 uncertain; transfer accuracy regressed slightly; transfer Brier is inconclusive.

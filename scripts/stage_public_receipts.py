@@ -17,7 +17,7 @@ bootstrap receipts safe to publish with Jev48. `SHA256SUMS` covers every file.
 Row-level mixed-dataset inputs and predictions are intentionally withheld pending
 a per-source redistribution audit. Their hashes, row counts, builders, and source
 identifiers remain published. The complete private receipt tree is preserved in
-Modal volume `jev48-artifacts`, run `jev48-1789858979`.
+Modal volume `jev48-artifacts`, run `jev48-1789867911`.
 
 `upstream/typed-decisions-README.md` is the immutable Apache-2.0 benchmark card at
 revision `ea9306458d6e9563628369a3d1e72e362fb381d2`. Jev48 does not possess Jev's

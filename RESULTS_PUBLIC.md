@@ -14,8 +14,8 @@ pinned test split. Jev48 is evaluated zero-shot and used none of this benchmark'
 
 - Benchmark: `LocalLLaMA/typed-decisions` at `ea9306458d6e9563628369a3d1e72e362fb381d2`.
 - Test size: 400 cases / 2000 decisions.
-- Jev48 median observed latency: 263.0 ms/case on Modal L40S; published Jev p50: 710 ms/case. Hardware/network differ, so this is not a controlled latency claim.
-- Jev48 raw prediction SHA-256: `7e6319ddb51a7de982980244648dcaa962a0c52b9d05b2ade02d78f9ccb90e9a`.
+- Jev48 median observed latency: 250.5 ms/case on Modal L40S; published Jev p50: 710 ms/case. Hardware/network differ, so this is not a controlled latency claim.
+- Jev48 raw prediction SHA-256: `db712a50593c0cbfff6b464a26159bae5447ef59d73919bd2fc217ed9197d2ad`.
 - Public benchmark: https://huggingface.co/datasets/LocalLLaMA/typed-decisions
 
 The benchmark's gold distribution is the mean of three samples from a separate

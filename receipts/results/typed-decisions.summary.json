@@ -13,17 +13,17 @@
     "source": "published dataset card; aggregate only, not paired predictions",
     "within_one_level": 0.952
   },
-  "mean_case_latency_ms": 360.00868411499937,
+  "mean_case_latency_ms": 348.19174026250005,
   "metrics": {
     "accuracy": 0.577,
-    "brier": 0.2550600205649078,
-    "ece_15": 0.12011960552329101,
-    "kl": 0.496394474275373,
+    "brier": 0.2556103699072917,
+    "ece_15": 0.12026350147052917,
+    "kl": 0.4961144388774909,
     "n_decisions": 2000,
-    "score_mae": 0.4825184837653647,
-    "soft_accuracy": 0.5076182711496798,
-    "total_variation": 0.30626265646233386,
-    "within_one_level": 0.89875
+    "score_mae": 0.4825434585833849,
+    "soft_accuracy": 0.5074411288530479,
+    "total_variation": 0.3064737622195445,
+    "within_one_level": 0.9
   },
   "mode": "zero-shot general model; no typed-decisions training rows used",
   "model": "/tmp/jev48/selected-model"

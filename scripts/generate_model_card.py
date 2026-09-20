@@ -115,7 +115,8 @@ print(result["answers"]["choice"]["probabilities"])
 
 Input is a state string plus typed questions and candidate criteria. Output is a
 probability mapping over candidate IDs. CPU inference can use `device="cpu"` and
-`torch.float32`. The private release smoke receipt records the clean-environment test.
+`torch.float32`. The [published smoke receipt](https://github.com/agilabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
+records the clean-environment test.
 
 ## Limitations
 

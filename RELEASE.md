@@ -10,12 +10,12 @@ Prepared privately for AGI Labs. Nothing in this release state is public yet.
 
 ## Frozen artifacts
 
-- Modal run: `jev48-1789858979`
+- Modal run: `jev48-1789867911`
 - Modal volume: `jev48-artifacts`
 - Selected trial: `soft-lr3e-6`
 - Model size: 3,763,692,048 bytes
-- Model SHA-256: `9a893c7b2fe9f2f108a2bb8cb621fbd893764ea5a5f362fb7ed2f5ee4d09ec32`
-- Complete private manifest: `jev48-1789858979/release/MANIFEST.json`
+- Model SHA-256: `20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec`
+- Complete private manifest: `jev48-1789867911/release/MANIFEST.json`
 
 ## Publication hold
 

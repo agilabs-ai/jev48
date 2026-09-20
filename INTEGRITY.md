@@ -70,7 +70,10 @@ Locked test/OOD are not read by selection code.
 
 After selection, the open starting point and Jev48 are independently temperature-scaled on the same `calibration` rows. Raw and calibrated receipts are retained.
 
-**Jev's headline row uses its native provider probabilities** because calibrated probability output is part of Jev's product claim. We may fit the same one-parameter temperature to Jev as a diagnostic, but it is not substituted into the primary Jev row.
+For a **future paired live Jev run**, Jev's headline row would use its native provider
+probabilities because calibrated probability output is part of Jev's product claim.
+We could fit the same one-parameter temperature to Jev as a diagnostic, but it would
+not replace the primary Jev row. No such live row exists in the current release.
 
 This makes three questions separable:
 

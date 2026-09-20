@@ -1,6 +1,6 @@
 {
   "benchmark_sha256": "61a429af4502688f44d3d80a211f39282b6ff7ae9b78aac29fe1e7c029fe65a8",
-  "mean_latency_ms": 51.57837864384384,
+  "mean_latency_ms": 48.76200011922702,
   "metrics": {
     "by_candidate_count": {
       "2": {
@@ -1089,6 +1089,6 @@
       "total_variation": 0.30630489743589745
     }
   },
-  "model": "Mapika/decider-2b",
+  "model": "/__modal/volumes/vo-zeocfbw493p1lMPqY1xn3U/huggingface/hub/models--Mapika--decider-2b/snapshots/4a0e86782adfdb7393e04b8ec9f6b939dca09273",
   "temperature": 1.0
 }

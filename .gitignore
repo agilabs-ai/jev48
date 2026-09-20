@@ -13,4 +13,5 @@ runs/
 *.bin
 wandb/
 WORKPLAN-*.md
+uv.lock
 /jev48-modal-results/

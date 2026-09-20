@@ -24,14 +24,14 @@ hard-majority preference labels while retaining replay data.
 - Upstream commit: `b08acf787d5d1f718a8c36c4677960f43772c7be`
 - Selected trial: `soft-lr3e-6`
 - Benchmark SHA-256: `61a429af4502688f44d3d80a211f39282b6ff7ae9b78aac29fe1e7c029fe65a8`
-- Fitted temperature: `1.041342653459261`
+- Fitted temperature: `1.041604557693133`
 
 ## Locked evaluation
 
 | Slice | Accuracy ↑ | Brier ↓ | ECE ↓ |
 |---|---:|---:|---:|
-| MT-Bench expert-vote test | 0.6207 | 0.4110 | 0.0587 |
-| Held-out transfer OOD | 0.7926 | 0.3039 | 0.0457 |
+| MT-Bench expert-vote test | 0.6207 | 0.4111 | 0.0456 |
+| Held-out transfer OOD | 0.7926 | 0.3039 | 0.0452 |
 
 Temperature was fitted only on the frozen calibration split after model selection.
 Locked test/OOD were not used for selection. Jev outputs were not used for training.
@@ -83,7 +83,8 @@ print(result["answers"]["choice"]["probabilities"])
 
 Input is a state string plus typed questions and candidate criteria. Output is a
 probability mapping over candidate IDs. CPU inference can use `device="cpu"` and
-`torch.float32`. The private release smoke receipt records the clean-environment test.
+`torch.float32`. The [published smoke receipt](https://github.com/agilabs-ai/jev48/blob/main/receipts/SMOKE_TEST.json)
+records the clean-environment test.
 
 ## Limitations
 

@@ -26,7 +26,7 @@
 ## Locked open-model result
 
 - selected derivative: `soft-lr3e-6`;
-- preference test: 62.1% accuracy, 0.4110 Brier;
+- preference test: 62.1% accuracy, 0.4111 Brier;
 - transfer OOD: 79.3% accuracy, 0.3039 Brier;
 - successful H200 list-price estimate: $2.87;
 - live Jev outputs used for training or selection: 0.
