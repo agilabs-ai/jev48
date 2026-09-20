@@ -1,6 +1,6 @@
 # Jev48
 
-An **AGI Labs** measured experiment. Independent and not affiliated with TypeSafe.
+An **Edge Labs AI** measured experiment. Independent and not affiliated with TypeSafe.
 
 **How close can ChatGPT get to Jev in one weekend?**
 

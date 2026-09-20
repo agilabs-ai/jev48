@@ -1,6 +1,6 @@
 # Jev48 release state
 
-The AGI Labs source repository and verified model checkpoint are public.
+The Edge Labs AI source repository and verified model checkpoint are public.
 
 ## Destinations
 
