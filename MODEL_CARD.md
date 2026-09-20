@@ -69,11 +69,25 @@ cd decider && git checkout b08acf787d5d1f718a8c36c4677960f43772c7be
 python -m pip install '.[train]'
 ```
 
+Download the public, hash-verified checkpoint from the GitHub release. The weights
+are split only to satisfy the release-asset size limit:
+
+```bash
+mkdir jev48-2b && cd jev48-2b
+gh release download v1.0.0 --repo agilabs-ai/jev48 \
+  --pattern 'model.safetensors.part-*' --pattern 'jev48-2b-config.tar.gz' \
+  --pattern SHA256SUMS
+shasum -a 256 -c SHA256SUMS
+cat model.safetensors.part-aa model.safetensors.part-ab > model.safetensors
+printf '20948bb0163f7230d3922e292e919a62cf6c0e0c7600718ab0d152b693227aec  model.safetensors\n' | shasum -a 256 -c -
+tar -xzf jev48-2b-config.tar.gz
+```
+
 ```python
 import torch
 from decider.infer import Decider
 
-model = Decider("agilabs-ai/jev48-2b", device="cuda", dtype=torch.bfloat16,
+model = Decider("/path/to/jev48-2b", device="cuda", dtype=torch.bfloat16,
                 temperature=None, use_graphs=False)
 questions = {"choice": {"type": "choice", "instructions": "Choose one.",
              "criteria": {"a": "Option A", "b": "Option B"}}}

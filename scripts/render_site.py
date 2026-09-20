@@ -57,6 +57,10 @@ def main():
 <h3>Integrity</h3><div class="audit"><div><b>Starting point disclosed</b><br><code>Mapika/decider-2b</code></div><div><b>Selection</b><br>dev only; locked test/OOD unseen</div><div><b>Jev leakage</b><br>0 outputs used for training</div></div>
 <footer>Human preference: MT-Bench expert votes over real model outputs. Transfer: public tasks held out by the pinned open starting model. A pooled scalar calibration is fit on frozen calibration rows. The independent Jev row is unpaired. Hashed aggregate receipts are published; mixed-source row-level data is withheld pending a per-source license audit.</footer>
 </main></body></html>'''
+    body = body.replace(
+        "https://huggingface.co/agilabs-ai/jev48-2b",
+        "https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0",
+    )
     out = Path(args.output); out.parent.mkdir(parents=True, exist_ok=True); out.write_text(body, encoding="utf-8")
     print(out)
 

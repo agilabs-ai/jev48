@@ -101,11 +101,15 @@ cd decider && git checkout {source['upstream_commit']}
 python -m pip install '.[train]'
 ```
 
+Download and verify the split checkpoint assets from the public
+[`v1.0.0` release](https://github.com/agilabs-ai/jev48/releases/tag/v1.0.0)
+using the commands in the repository's `MODEL_CARD.md`.
+
 ```python
 import torch
 from decider.infer import Decider
 
-model = Decider("agilabs-ai/jev48-2b", device="cuda", dtype=torch.bfloat16,
+model = Decider("/path/to/jev48-2b", device="cuda", dtype=torch.bfloat16,
                 temperature=None, use_graphs=False)
 questions = {{"choice": {{"type": "choice", "instructions": "Choose one.",
              "criteria": {{"a": "Option A", "b": "Option B"}}}}}}
