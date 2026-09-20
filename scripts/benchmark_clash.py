@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, hashlib, json, time, urllib.request
+import argparse, hashlib, json, random, time, urllib.request
 from pathlib import Path
 import numpy as np, torch
 from decider.infer import Decider
@@ -20,10 +20,12 @@ def main():
  model=Decider(a.model,device=a.device,dtype=torch.bfloat16,temperature=1.0,use_graphs=False); results=[]; lat=[]
  for i,s in enumerate(samples,1):
   answers=s["answers"]; values=[answers[k] for k in ("image_only","text_only","irrelevant_but_plausible")]+[CONFLICT]
-  criteria={f"c{j}":v for j,v in enumerate(values)}
+  random.Random(i-1).shuffle(values)
+  criteria={value:None for value in values}
   state=json.dumps({"image_description":s["original_caption"],"caption":s["conflicting_caption"],"question":s["question"]},ensure_ascii=False)
-  start=time.perf_counter(); ans=model.system_one(state,{"decision":{"type":"choice","instructions":INSTRUCTION,"criteria":criteria}},independent=True)["answers"]["decision"]; lat.append((time.perf_counter()-start)*1000)
-  probs={k:float(ans["probabilities"][k]) for k in criteria}; pred=max(probs,key=probs.get); correct=pred=="c3"
+  questions={"decision":{"type":"choice","instructions":INSTRUCTION,"criteria":criteria},"has_conflict":{"type":"noul","instructions":"Do the image_description and the caption contradict each other about the answer to the question?","criteria":{"true":"The image description and the caption give different answers to the question.","false":"The image description and the caption agree on the answer to the question."}}}
+  start=time.perf_counter(); ans=model.system_one(state,questions,independent=True)["answers"]["decision"]; lat.append((time.perf_counter()-start)*1000)
+  probs={k:float(ans["probabilities"][k]) for k in criteria}; pred=max(probs,key=probs.get); correct=pred==CONFLICT
   results.append({"sample_idx":i-1,"image_id":s["image_id"],"predicted":pred,"correct":correct,"probabilities":probs,"latency_ms":lat[-1]})
   if i==1 or i%100==0 or i==len(samples): print(f"clash {i}/{len(samples)}",flush=True)
  out=Path(a.output); out.parent.mkdir(parents=True,exist_ok=True); out.write_text("".join(json.dumps(x,sort_keys=True)+"\n" for x in results)); n=len(results); wins=sum(x["correct"] for x in results)
