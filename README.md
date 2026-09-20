@@ -1,5 +1,7 @@
 # Jev48
 
+An **AGI Labs** measured experiment. Independent and not affiliated with TypeSafe.
+
 **How close can ChatGPT get to Jev in one weekend?**
 
 TypeSafe released Jev, a System One model: unstructured state in, typed probability distributions out, without autoregressive answer generation.
