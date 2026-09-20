@@ -40,6 +40,24 @@ withheld from the public package because the benchmark inputs carry source-speci
 The complete six-suite registry and all audited exclusions are in
 [`BENCHMARK_REGISTRY.md`](BENCHMARK_REGISTRY.md).
 
+## Public benchmark results
+
+| Benchmark | Evaluated cases | Jev | Jev48 | Delta | Comparison |
+|---|---:|---:|---:|---:|---|
+| Typed decisions | 2,000 | 72.7% | 57.7% | -15.0 pts | Aggregate / unpaired |
+| PhishNChips v5.2 | 2,000 | 62.6% | 50.0% | -12.6 pts | Aggregate / unpaired |
+| JevBench public v1.2.2 | 231 | 86.6% | 69.7% | -16.9 pts | Paired outcomes |
+| BTZSC pilot | 300 | 75.3% | 83.3% | **+8.0 pts** | Aggregate / unpaired |
+| Code review | 480 | 99.0% | 81.9% | -17.2 pts | Repeated Jev reference |
+| CLASH conflicts | 1,289 | 98.6% | 0.0% | -98.6 pts | Aggregate / unpaired |
+
+These are all six eligible reproducible public suites: 6,300 evaluated decisions or
+cases, with one suite win for Jev48. On PhishNChips, Jev48 also recorded higher ranking
+AUROC (0.769 vs. the source-published Jev result of 0.689), despite its lower fixed
+0.5-threshold accuracy. Full methodology, metric definitions, source pins, limitations,
+and receipts are in [`RESULTS_PUBLIC.md`](RESULTS_PUBLIC.md),
+[`RESULTS.md`](RESULTS.md), and [`receipts/results/`](receipts/results/).
+
 ## What ChatGPT chose
 
 After auditing the emerging OSS ecosystem, ChatGPT selected [`Mapika/decider`](https://github.com/Mapika/decider) as the strongest public starting point and pins it at:
