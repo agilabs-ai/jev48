@@ -54,6 +54,16 @@ def main() -> None:
             "regression": dict(Counter(x.split for x in regression)),
             "replay": dict(Counter(x.split for x in replay)),
         },
+        "data_quality": {
+            "selected_duplicate_source_rows_collapsed": {
+                k: sum(max(0, int(x.metadata.get("upstream_duplicate_count", 1)) - 1) for x in v)
+                for k, v in {"transfer": transfer, "regression": regression, "replay": replay}.items()
+            },
+            "selected_conflicting_duplicate_rows_preserved": {
+                k: sum(bool(x.metadata.get("upstream_conflicting_duplicate", False)) for x in v)
+                for k, v in {"transfer": transfer, "regression": regression, "replay": replay}.items()
+            },
+        },
         "sha256": {k: file_sha256(p) for k, p in paths.items()},
     }
     (args.out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")

@@ -23,6 +23,11 @@ Only use metrics from the locked receipts / `LAUNCH_FACTS.md`.
 
 Do not say “beats Jev” from one cherry-picked slice. Scope every superiority claim to the metric and benchmark where it is true.
 
+The credential-free public comparison is aggregate and unpaired. Say that the
+`LocalLLaMA/typed-decisions` maintainers published the Jev row and that Jev48 was run
+separately on their pinned test split. Do not imply access to Jev's raw predictions or
+a Jev run on Jev48's original frozen benchmark.
+
 A strong result can also be:
 
 - “got within X points of Jev”;

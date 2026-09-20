@@ -35,6 +35,11 @@ Models in final table:
 - selected Jev48 reproduction;
 - native Jev, queried only after selection is frozen.
 
+If private Jev access is unavailable, the direct row remains explicitly unrun. A
+secondary, independently published Jev row may be compared only by running the
+frozen Jev48 checkpoint on that source's exact pinned public benchmark and scorer;
+it must be labeled aggregate/unpaired and may not be presented as the primary table.
+
 Metrics: accuracy, multiclass Brier, NLL/ECE where meaningful, plus paired bootstrap comparisons.
 
 ## Naming

@@ -20,12 +20,22 @@ modal run modal_app.py
 
 This builds data, trains candidates, selects on dev, and evaluates base/selected model on locked rows.
 
-## Stage 2 — live Jev
+## Stage 2 — Jev comparison
+
+Preferred when credentials are available: live Jev on the frozen Jev48 rows.
 
 ```bash
 modal secret create jev48-secrets TYPESAFE_API_KEY=...
 # or OPENROUTER_API_KEY=...
 modal run modal_jev.py --run-name <stage-1-run>
+```
+
+Credential-free fallback: run the selected checkpoint on the pinned independent
+`LocalLLaMA/typed-decisions` test split, whose maintainers publish a measured Jev
+1.13.0 aggregate row. This is a secondary, unpaired comparison and is labeled as such.
+
+```bash
+modal run modal_public_benchmark.py --run-name <stage-1-run>
 ```
 
 ## Stage 3 — release audit

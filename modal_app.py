@@ -32,7 +32,8 @@ ROOT = Path(__file__).resolve().parent
 APP_NAME = "jev48"
 DECIDER_COMMIT = "b08acf787d5d1f718a8c36c4677960f43772c7be"
 DECIDER_MODEL = "Mapika/decider-2b"
-MODAL_H100_USD_PER_SECOND = 0.001097  # Modal public list price checked 2026-09-19
+MODAL_GPU_REQUESTED = "H200"
+MODAL_GPU_USD_PER_SECOND = 0.001261  # Modal public list price checked 2026-09-19
 MODAL_PRICING_URL = "https://modal.com/pricing"
 
 app = modal.App(APP_NAME)
@@ -46,12 +47,19 @@ image = (
     .run_commands(
         f"git clone https://github.com/Mapika/decider.git /opt/decider && cd /opt/decider && git checkout {DECIDER_COMMIT}",
         "cd /opt/decider && uv pip install --system -e '.[train,serve]'",
-        "uv pip install --system 'pydantic>=2.10' 'pyyaml>=6' 'httpx>=0.28' 'pytest>=8'",
+        "uv pip install --system 'pydantic>=2.10' 'pyyaml>=6' 'httpx>=0.28' 'pytest>=8' 'datasets>=3.6,<4'",
     )
     .env({
         "HF_HOME": "/cache/huggingface",
         "HF_HUB_CACHE": "/cache/huggingface/hub",
+        # Keep datasets 3.6 metadata separate from caches written by newer
+        # incompatible datasets majors during earlier/other Modal runs.
+        "HF_DATASETS_CACHE": "/cache/huggingface/datasets-3.6",
         "HF_XET_HIGH_PERFORMANCE": "1",
+        # The pinned upstream registry includes CogComp/trec, whose pinned
+        # loader is a Hugging Face dataset script. datasets 3.6 requires this
+        # explicit opt-in; datasets 4+ removed script support entirely.
+        "HF_DATASETS_TRUST_REMOTE_CODE": "1",
         "TOKENIZERS_PARALLELISM": "false",
     })
     .add_local_dir(
@@ -166,7 +174,7 @@ def benchmark_final(work: Path, model: str, label: str) -> tuple[Path, Path]:
 
 @app.function(
     image=image,
-    gpu="H100",
+    gpu=MODAL_GPU_REQUESTED,
     timeout=6 * 60 * 60,
     volumes={"/cache": hf_cache, "/artifacts": artifacts},
 )
@@ -279,9 +287,10 @@ def experiment() -> dict:
         "started_utc": started_utc,
         "ended_utc": datetime.now(timezone.utc).isoformat(),
         "elapsed_seconds": elapsed_seconds,
-        "modal_h100_list_price_usd_per_second": MODAL_H100_USD_PER_SECOND,
+        "modal_gpu_requested": MODAL_GPU_REQUESTED,
+        "modal_gpu_list_price_usd_per_second": MODAL_GPU_USD_PER_SECOND,
         "modal_pricing_url": MODAL_PRICING_URL,
-        "estimated_h100_gpu_list_cost_usd": elapsed_seconds * MODAL_H100_USD_PER_SECOND,
+        "estimated_gpu_list_cost_usd": elapsed_seconds * MODAL_GPU_USD_PER_SECOND,
         "cost_note": "GPU list-price estimate only; excludes CPU/memory, region multipliers, credits, storage and API charges",
         "selection": selection,
         "gpu": subprocess.check_output(["python", "-c", "import torch; print(torch.cuda.get_device_name(0))"], text=True).strip(),

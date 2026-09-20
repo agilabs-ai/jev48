@@ -49,22 +49,44 @@ def _flatten_upstream_examples(
     split: str,
     limit: int,
     seed: str,
+    allow_conflicting_duplicates: bool = False,
 ) -> list[DecisionExample]:
     """Convert upstream decider Example/Q objects without depending on their class definitions."""
     rows = list(upstream_examples)
-    # Outcome-blind order: context + question text + candidate strings, never the gold index.
-    keyed: list[tuple[str, Any, Any, int]] = []
+    # Collapse exact repeated source questions before applying the fixed quota.
+    # BBC News contains repeated articles with identical labels; counting them
+    # twice would overweight those inputs and also produce duplicate row IDs.
+    semantic_groups: dict[tuple[str, str, tuple[str, ...], int], list[tuple[Any, Any]]] = {}
     for ex_idx, ex in enumerate(rows):
         for q_idx, q in enumerate(ex.qs):
-            key = _digest(ex.context, q.text, *q.options, seed=seed)
-            keyed.append((key, ex, q, q_idx))
+            signature = (str(ex.context), str(q.text), tuple(str(x) for x in q.options), q_idx)
+            semantic_groups.setdefault(signature, []).append((ex, q))
+
+    # Outcome-blind order: context + question text + candidate strings, never the gold index.
+    keyed: list[tuple[str, Any, Any, int, int, int | None]] = []
+    for signature, occurrences in semantic_groups.items():
+        labels = {int(q.gold) for _, q in occurrences}
+        if len(labels) != 1:
+            if not allow_conflicting_duplicates:
+                raise ValueError(f"task {task_name} has conflicting labels for a duplicate question")
+            # Replay is training-only. Preserve contradictory source signals as
+            # separate rows, but give them outcome-blind occurrence keys/IDs.
+            for occurrence_index, (ex, q) in enumerate(occurrences):
+                q_idx = signature[3]
+                key = _digest(ex.context, q.text, *q.options, occurrence_index, seed=seed)
+                keyed.append((key, ex, q, q_idx, 1, occurrence_index))
+            continue
+        ex, q = occurrences[0]
+        q_idx = signature[3]
+        key = _digest(ex.context, q.text, *q.options, seed=seed)
+        keyed.append((key, ex, q, q_idx, len(occurrences), None))
     keyed.sort(key=lambda x: x[0])
     if limit and len(keyed) < limit:
         raise ValueError(f"task {task_name} provides only {len(keyed)} questions, requested {limit}")
     selected = keyed[:limit] if limit else keyed
 
     out: list[DecisionExample] = []
-    for rank, (_, ex, q, q_idx) in enumerate(selected):
+    for rank, (_, ex, q, q_idx, duplicate_count, occurrence_index) in enumerate(selected):
         n = len(q.options)
         if not 2 <= n <= 255:
             continue
@@ -76,7 +98,7 @@ def _flatten_upstream_examples(
         inv_gold = perm.index(gold)
         candidates = [Candidate(id=f"c{i:03d}", text=str(q.options[src])) for i, src in enumerate(perm)]
         target = [float(i == inv_gold) for i in range(n)]
-        row_id = _digest(task_name, ex.context, q.text, q_idx, seed=seed + ":id")[:24]
+        row_id = _digest(task_name, ex.context, q.text, q_idx, occurrence_index, seed=seed + ":id")[:24]
         out.append(
             DecisionExample(
                 id=f"decider:{task_name}:{row_id}",
@@ -93,6 +115,9 @@ def _flatten_upstream_examples(
                     "source_commit": DECIDER_COMMIT,
                     "upstream_task": task_name,
                     "upstream_question_index": q_idx,
+                    "upstream_duplicate_count": duplicate_count,
+                    "upstream_conflicting_duplicate": occurrence_index is not None,
+                    "upstream_source_occurrence_index": occurrence_index,
                     "candidate_order_randomized": True,
                 },
             )
@@ -126,5 +151,14 @@ def build_replay_rows(load_task, per_task: int = 500) -> list[DecisionExample]:
     out: list[DecisionExample] = []
     for task_name in REPLAY_TASKS:
         train, _ = load_task(task_name)
-        out.extend(_flatten_upstream_examples(task_name, train, "train", per_task, seed="jev48-replay-v1"))
+        out.extend(
+            _flatten_upstream_examples(
+                task_name,
+                train,
+                "train",
+                per_task,
+                seed="jev48-replay-v1",
+                allow_conflicting_duplicates=True,
+            )
+        )
     return out

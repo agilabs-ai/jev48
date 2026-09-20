@@ -17,9 +17,15 @@ This repository is an auditable experiment. ChatGPT was given the goal, public i
 
 ## Status
 
-**Experiment staged; final locked numbers are not published yet.**
+**Open-model experiment and public Jev benchmark comparison complete; publication pending.**
 
-The complete training/evaluation pipeline is implemented and locally tested. The next external step is one Modal run, followed by the live Jev comparison through either TypeSafe or OpenRouter.
+The frozen open-model experiment completed on Modal. The dev-only gate selected the
+`soft-lr3e-6` derivative, and the locked test/OOD receipts passed the release audit.
+Private Jev access was unavailable, so the direct same-row comparison remains unrun.
+Instead, the frozen derivative was evaluated zero-shot on the pinned public
+`LocalLLaMA/typed-decisions` benchmark, which publishes an independently measured Jev
+1.13.0 aggregate row. See [`RESULTS_PUBLIC.md`](RESULTS_PUBLIC.md). No Jev output has
+been used for training or model selection.
 
 ## What ChatGPT chose
 

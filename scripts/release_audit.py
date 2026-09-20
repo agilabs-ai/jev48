@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
 
 from jev48.decider_bridge import DECIDER_COMMIT, DECIDER_MODEL
 from jev48.mtbench import MTBENCH_REVISION
+from jev48.typed_decisions import REVISION as TYPED_DECISIONS_REVISION
 
 
 SECRET_PATTERNS = [
@@ -22,11 +23,13 @@ SECRET_PATTERNS = [
     re.compile(r"OPENROUTER_API_KEY\s*=\s*(?!\.\.\.|YOUR_KEY|YOUR_)[^\s`]+"),
 ]
 
+IGNORED_SCAN_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache"}
+
 
 def scan_secrets(root: Path):
     hits = []
     for path in root.rglob("*"):
-        if not path.is_file() or ".git" in path.parts or "__pycache__" in path.parts:
+        if not path.is_file() or any(part in IGNORED_SCAN_DIRS for part in path.parts):
             continue
         if path.stat().st_size > 5_000_000:
             continue
@@ -85,6 +88,20 @@ def main():
             report = json.loads((final / "results/final_report.json").read_text())
             if report.get("benchmark_sha256") != manifest.get("sha256"):
                 errors.append("final report hash does not match frozen benchmark manifest")
+            public_summary = final / "results/public/typed-decisions.summary.json"
+            public_predictions = final / "results/public/typed-decisions.jsonl"
+            if public_summary.exists() or public_predictions.exists():
+                if not public_summary.exists() or not public_predictions.exists():
+                    errors.append("public comparison requires both predictions and summary")
+                else:
+                    public = json.loads(public_summary.read_text())
+                    rows = [json.loads(line) for line in public_predictions.read_text().splitlines() if line]
+                    if public.get("benchmark_revision") != TYPED_DECISIONS_REVISION:
+                        errors.append("public comparison benchmark revision is not pinned")
+                    if public.get("metrics", {}).get("n_decisions") != 2000 or len(rows) != 400:
+                        errors.append("public comparison is incomplete")
+                    if len({row.get("id") for row in rows}) != len(rows):
+                        errors.append("public comparison contains duplicate case IDs")
 
     result = {"ok": not errors, "pins": pins, "secret_hits": secret_hits, "errors": errors}
     print(json.dumps(result, indent=2, sort_keys=True))

@@ -58,7 +58,7 @@ def main():
         f"- Versus public starting point on transfer: **{signed_pp(ours['transfer_accuracy'], base['transfer_accuracy'])} accuracy**, **{signed(ours['transfer_brier'], base['transfer_brier'])} Brier**.",
         "- Jev outputs used for training/model selection: **0**.",
         f"- External GPU experiment elapsed time: **{manifest.get('elapsed_seconds', 'see run manifest')} seconds**.",
-        f"- Estimated H100 GPU list cost: **${float(manifest['estimated_h100_gpu_list_cost_usd']):.2f}** (list-price estimate only; see run manifest for exclusions)." if manifest.get("estimated_h100_gpu_list_cost_usd") is not None else "- Estimated H100 GPU list cost: **see run manifest after cloud execution**.",
+        f"- Estimated {manifest.get('gpu', manifest.get('modal_gpu_requested', 'GPU'))} list cost: **${float(manifest['estimated_gpu_list_cost_usd']):.2f}** (list-price estimate only; see run manifest for exclusions)." if manifest.get("estimated_gpu_list_cost_usd") is not None else "- Estimated GPU list cost: **see run manifest after cloud execution**.",
     ]
     if jev:
         lines += [

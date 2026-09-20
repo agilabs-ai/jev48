@@ -10,9 +10,9 @@ modal run modal_app.py
 
 ## Hardware
 
-The current job requests one H100 for iteration speed and reduced operational friction. The research claim is not that an H100 is required.
+The current job requests one H200. An observed 80GB H100 run exhausted memory on the second training microbatch, while the unchanged configuration completed a candidate on H200. The research claim is not that an H200 is intrinsically required; lowering the token batch could reduce memory at the cost of changing the predefined execution configuration.
 
-The run manifest records elapsed H100-container time and a clearly labeled list-price GPU estimate. Do not present that estimate as the user's invoice.
+The run manifest records elapsed GPU-container time and a clearly labeled H200 list-price estimate. Do not present that estimate as the user's invoice.
 
 ## What is trained
 

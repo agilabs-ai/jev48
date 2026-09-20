@@ -45,8 +45,14 @@ def _conversation_text(conversation: Any) -> str:
             raise ValueError("conversation turns must be objects")
         role = str(turn.get("role", "unknown")).strip().upper()
         content = turn.get("content")
-        if not isinstance(content, str) or not content.strip():
-            raise ValueError("conversation turn content must be nonempty text")
+        if not isinstance(content, str):
+            raise ValueError("conversation turn content must be text")
+        # The pinned dataset contains a genuine empty llama-13b answer for
+        # question 127. Preserve that outcome explicitly instead of dropping
+        # its human votes or allowing adjacent turns to collapse together.
+        if not content.strip():
+            lines.append(f"{role}: [EMPTY RESPONSE]")
+            continue
         # Exactly one rendered line per structured chat message. Responses often
         # contain different numbers of internal newlines; preserving those as raw
         # line breaks would make A/B message alignment drift on multi-turn rows.

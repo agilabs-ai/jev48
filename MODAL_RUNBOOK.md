@@ -8,7 +8,7 @@ modal setup
 modal run modal_app.py
 ```
 
-The H100 job:
+The H200 job:
 
 1. runs tests + release audit;
 2. builds/fixes hashes for the MT-Bench human-vote and held-out transfer suites;

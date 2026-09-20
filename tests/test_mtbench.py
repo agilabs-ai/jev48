@@ -70,3 +70,11 @@ def test_multiline_responses_do_not_break_turn_alignment():
     # Shared user turns stay shared rather than being accidentally paired with\n    # extra internal response lines.
     assert ex.state.count("USER: Follow up") == 1
     assert "⏎" in ex.state
+
+
+def test_empty_response_is_preserved_explicitly():
+    rows = [fake_row(qid, "model_a", cb="") for qid in range(81, 161)]
+
+    ex = next(e for e in aggregate_human_votes(rows) if e.metadata["question_id"] == 81)
+
+    assert "ASSISTANT: [EMPTY RESPONSE]" in ex.state
