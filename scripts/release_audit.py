@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 import re
 import sys
+import tarfile
+import tempfile
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +54,27 @@ def scan_secrets(root: Path):
 def sha256(path: Path) -> str:
     import hashlib
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_public_run(name: str, summary: dict, rows: list[dict], expected_count: int,
+                        id_fn, expected_model: str, manifest_sha: str, commit: str,
+                        script_digest: str) -> list[str]:
+    """Fail closed on headline metrics and immutable run provenance."""
+    errors = []
+    ids = [id_fn(row) for row in rows]
+    if len(rows) != expected_count or len(set(ids)) != expected_count:
+        errors.append(f"{name} predictions are incomplete or contain duplicate IDs")
+    provenance = summary.get("model", {})
+    expected = (expected_model, manifest_sha, "jev48-1789867911", commit, script_digest)
+    actual = (provenance.get("sha256"), provenance.get("release_manifest_sha256"),
+              provenance.get("run_name"), provenance.get("repo_commit"), provenance.get("script_sha256"))
+    if actual != expected:
+        errors.append(f"{name} immutable run provenance mismatch")
+    if rows:
+        accuracy = sum(bool(row.get("correct")) for row in rows) / len(rows)
+        if abs(accuracy - float(summary.get("metrics", {}).get("jev48_accuracy", -1))) > 1e-12:
+            errors.append(f"{name} headline accuracy mismatch")
+    return errors
 
 
 def audit_additional_benchmarks(final: Path, root: Path, errors: list[str]) -> None:
@@ -142,6 +165,37 @@ def audit_additional_benchmarks(final: Path, root: Path, errors: list[str]) -> N
             errors.append("JevBench paired cluster bootstrap mismatch")
         if summary.get("benchmark_revision") != "e105a48f8cdb7f3babb3594424f73e5d7bdc97b9":
             errors.append("JevBench revision mismatch")
+
+    newer = {
+        "btzsc": (300, lambda r: r.get("id"), "9c242f5ad77300514d52784dd23f37d9211cd6d4", "8166ce95f49a4a81dfca7029583574230ba142c9cbac99110360ae4ae7086bef"),
+        "code-review": (480, lambda r: (r.get("case_id"), r.get("rule")), "9c242f5ad77300514d52784dd23f37d9211cd6d4", "d3834231b8a00c440c9b1fa09a08ecbe8029ed08e2f73c3d1ca3098d9bd555a3"),
+        "clash": (1289, lambda r: r.get("sample_idx"), "b600a6410569277cf8eac25c143058f00dd8c3f8", "ed0712870ae4af226a0fb0b6a7b560fe65ee326fea770465e1c84f7785505377"),
+    }
+    for name, (count, id_fn, commit, script_digest) in newer.items():
+        sp, rp = final / f"results/public/{name}.summary.json", final / f"results/public/{name}.jsonl"
+        if not sp.exists() or not rp.exists():
+            errors.append(f"missing {name} summary or predictions")
+            continue
+        summary = json.loads(sp.read_text()); rows = [json.loads(x) for x in rp.read_text().splitlines() if x]
+        errors.extend(validate_public_run(name, summary, rows, count, id_fn, expected_model, manifest_sha, commit, script_digest))
+        if name == "btzsc":
+            url = f"https://raw.githubusercontent.com/AbdelStark/jev-benchmarks/{summary.get('benchmark_revision')}/results/reports/btzsc-pilot-v1.json"
+            raw = urlopen(url, timeout=120).read()
+            if __import__("hashlib").sha256(raw).hexdigest() != "292db65ade535b9cd9c06477b6f7863e03a6106ec0a5fa56378a08164ee14598": errors.append("BTZSC reference report hash mismatch")
+            reference = json.loads(raw)["results"]["jev"]
+            for dataset, metrics in summary["metrics"]["by_dataset"].items():
+                if abs(metrics["jev_accuracy"] - reference[dataset]["accuracy"]) > 1e-12: errors.append(f"BTZSC Jev reference mismatch: {dataset}")
+            if summary.get("dataset_revision") != "fef2a2ac62b69c58670047dddf045c53d7c3cb5e": errors.append("BTZSC dataset revision mismatch")
+        elif name == "code-review":
+            raw = urlopen(f"https://raw.githubusercontent.com/gemanor/jev-code-review-benchmark/{summary.get('benchmark_revision')}/docs/results/decisions.csv", timeout=120).read()
+            if __import__("hashlib").sha256(raw).hexdigest() != summary.get("reference_csv_sha256"): errors.append("code-review reference CSV hash mismatch")
+            ref = [r for r in csv.DictReader(io.StringIO(raw.decode())) if r["model"] == "jev" and r["condition"] == "primary"]
+            if abs(sum(r["correct"] == "True" for r in ref)/len(ref) - summary["metrics"]["jev_accuracy"]) > 1e-12: errors.append("code-review Jev reference mismatch")
+        elif name == "clash":
+            raw = urlopen(summary["source_url"], timeout=120).read()
+            if __import__("hashlib").sha256(raw).hexdigest() != summary.get("source_sha256"): errors.append("CLASH source download hash mismatch")
+            samples = json.loads(raw)["samples"]
+            if len(samples) != len(rows) or any(rows[i]["image_id"] != sample["image_id"] for i, sample in enumerate(samples)): errors.append("CLASH rows do not match pinned source order")
 
 
 def main():

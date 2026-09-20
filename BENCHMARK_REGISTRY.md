@@ -8,7 +8,7 @@ request mapping are public and reproducible. No result-dependent subsets are use
 
 | Benchmark | Public population | Jev reference | Comparison |
 |---|---:|---:|---|
-| LocalLLaMA/typed-decisions | 246 cases | 72.7% | same public test split; aggregate reference |
+| LocalLLaMA/typed-decisions | 400 cases / 2,000 decisions | 72.7% | same public test split; aggregate reference |
 | PhishNChips v5.2 | 2,000 emails | 62.6% accuracy / .689 AUROC | exact nine-question protocol; aggregate reference |
 | JevBench v1.2.2 | 231 public tasks | 86.6% | paired public task outcomes |
 | BTZSC pilot v1 | 300 texts | 75.3% macro accuracy | exact pinned sampling and native choice protocol |

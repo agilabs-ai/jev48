@@ -7,7 +7,7 @@
     "by_category": {
       "code_quality": {
         "jev48_accuracy": 0.8416666666666667,
-        "jev48_accuracy_wilson_ci95": [
+        "jev48_accuracy_wilson_ci95_naive_per_decision": [
           0.7901494818270289,
           0.8824186728795727
         ],
@@ -15,7 +15,7 @@
       },
       "correctness": {
         "jev48_accuracy": 0.7958333333333333,
-        "jev48_accuracy_wilson_ci95": [
+        "jev48_accuracy_wilson_ci95_naive_per_decision": [
           0.7403647376289731,
           0.8419808597389379
         ],
@@ -23,7 +23,7 @@
       }
     },
     "jev48_accuracy": 0.81875,
-    "jev48_accuracy_wilson_ci95": [
+    "jev48_accuracy_wilson_ci95_naive_per_decision": [
       0.7818010659556771,
       0.8506375033761833
     ],
@@ -32,6 +32,7 @@
     "n_decisions": 480
   },
   "mode": "all 24 evaluation families, five versions each, four native rule decisions per case; one deterministic pass versus Jev source study's three rounds",
+  "uncertainty_note": "Wilson intervals are labeled naive_per_decision because rules and versions are clustered within 24 families; they are descriptive only and are not used for cross-system claims.",
   "model": {
     "release_manifest_sha256": "3a9b90ff86412ecc0dfded3d3dcf1c68516882d444e812ac0606ca19e454d50e",
     "repo_commit": "9c242f5ad77300514d52784dd23f37d9211cd6d4",

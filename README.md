@@ -19,7 +19,7 @@ This repository is an auditable experiment. ChatGPT was given the goal, public i
 
 ## Status
 
-**Open-model experiment and three public Jev benchmark comparisons published.**
+**Open-model experiment and six public Jev benchmark comparisons published.**
 
 The frozen open-model experiment completed on Modal. The dev-only gate selected the
 `soft-lr3e-6` derivative, and the locked test/OOD receipts passed the release audit.
@@ -29,7 +29,7 @@ Instead, the frozen derivative was evaluated zero-shot on the pinned public
 1.13.0 aggregate row. See [`RESULTS_PUBLIC.md`](RESULTS_PUBLIC.md). No Jev output has
 been used for training or model selection.
 
-Two additional zero-shot comparisons were subsequently added without changing the
+Five additional zero-shot comparisons were subsequently added without changing the
 model: all 2,000 PhishNChips v5.2 emails and all 231 public JevBench v1.2.2
 tasks. Jev48 produced higher phishing ranking AUROC (0.769 vs source-published 0.689),
 while its fixed 0.5-threshold accuracy remained materially worse (50.0% vs 62.6%).
@@ -37,6 +37,8 @@ The AUROC comparison is aggregate and unpaired, not a parity claim. It tied Jev 
 48 public easy-tier JevBench tasks but trailed on the complete public suite. See
 [`RESULTS.md`](RESULTS.md) and [`receipts/`](receipts/). Row-level predictions are
 withheld from the public package because the benchmark inputs carry source-specific terms.
+The complete six-suite registry and all audited exclusions are in
+[`BENCHMARK_REGISTRY.md`](BENCHMARK_REGISTRY.md).
 
 ## What ChatGPT chose
 
