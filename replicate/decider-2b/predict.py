@@ -11,27 +11,9 @@ from decider.infer import Decider
 
 
 MODEL_PATH = "/weights/decider-2b"
-DEFAULT_QUESTIONS = json.dumps(
-    {
-        "intent": {
-            "type": "choice",
-            "instructions": "What should happen next?",
-            "criteria": {
-                "approve": "Safe to proceed automatically",
-                "review": "Needs a human decision",
-                "reject": "Should not proceed",
-            },
-        },
-        "urgent": {
-            "type": "noul",
-            "instructions": "Does this need attention today?",
-            "criteria": {
-                "true": "Delay would materially worsen the outcome",
-                "false": "It can safely wait",
-            },
-        },
-    },
-    indent=2,
+DEFAULT_QUESTIONS = (
+    '{"action":{"type":"choice","instructions":"What should happen next?",'
+    '"criteria":["approve","review","reject"]}}'
 )
 
 
@@ -101,7 +83,7 @@ class Predictor(BasePredictor):
                 "A JSON object of Jev-shaped questions keyed by ID. Supported types: "
                 "choice, noul, and score."
             ),
-            default=DEFAULT_QUESTIONS,
+            default="",
         ),
         independent: bool = Input(
             description="Score each question independently so questions cannot influence one another.",
@@ -113,5 +95,5 @@ class Predictor(BasePredictor):
         if len(state) > 100_000:
             raise ValueError("state must be at most 100,000 characters")
 
-        questions = parse_questions(questions_json)
+        questions = parse_questions(questions_json or DEFAULT_QUESTIONS)
         return self.model.system_one(state, questions, independent=independent)

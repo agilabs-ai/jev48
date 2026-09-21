@@ -68,3 +68,14 @@ def test_predict_calls_system_one(predictor_module):
     result = predictor.predict("hello", questions, False)
     assert result["state"] == "hello"
     assert result["independent"] is False
+
+
+def test_predict_uses_default_questions_when_input_is_blank(predictor_module):
+    class FakeModel:
+        def system_one(self, state, questions, independent):
+            return {"questions": questions}
+
+    predictor = predictor_module.Predictor()
+    predictor.model = FakeModel()
+    result = predictor.predict("hello", "", True)
+    assert "action" in result["questions"]
