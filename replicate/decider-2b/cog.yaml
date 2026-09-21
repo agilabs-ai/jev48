@@ -1,0 +1,11 @@
+build:
+  gpu: true
+  python_version: "3.11"
+  python_requirements: requirements.txt
+  run:
+    - >-
+      python -c "from huggingface_hub import snapshot_download;
+      snapshot_download('Mapika/decider-2b', revision='b37f7e1ba3fbc9238004cf531fabbee2619973fd',
+      local_dir='/weights/decider-2b')"
+
+predict: "predict.py:Predictor"

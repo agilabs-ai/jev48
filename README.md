@@ -8,6 +8,7 @@ An **Edge Labs AI** measured experiment. Independent and not affiliated with Typ
 
 [Benchmark report](https://getedge.cc/jev48/) ·
 [Model release](https://github.com/edgelabs-ai/jev48/releases/tag/v1.0.0) ·
+[Try Decider-2B on Replicate](https://replicate.com/getedge/decider-2b) ·
 [Results and methodology](RESULTS_PUBLIC.md) ·
 [Machine-readable project guide](llms.txt)
 
@@ -161,6 +162,33 @@ These are enforced in code:
 See [`INTEGRITY.md`](INTEGRITY.md).
 
 ## Run it
+
+### Hosted inference on Replicate
+
+The public [`getedge/decider-2b`](https://replicate.com/getedge/decider-2b)
+deployment provides a playground and API for Jev-shaped `choice`, `noul`, and
+`score` questions. It runs on a scale-to-zero Nvidia T4; each caller uses their
+own Replicate account and billing, so there is no Edge Labs API key or billing
+wrapper.
+
+This endpoint hosts the untouched Apache-2.0
+[`Mapika/decider-2b`](https://huggingface.co/Mapika/decider-2b) checkpoint. It is
+an independent community deployment, not the Jev48 derivative checkpoint and
+not affiliated with TypeSafe or Jev. The reproducible Cog package is in
+[`replicate/decider-2b`](replicate/decider-2b/).
+
+```python
+import replicate
+
+output = replicate.run(
+    "getedge/decider-2b",
+    input={
+        "state": "A customer reports a duplicate card charge.",
+        "questions_json": '{"action":{"type":"choice","instructions":"What should happen next?","criteria":{"approve":"Refund automatically","review":"Send to a human","reject":"Reject the request"}}}',
+        "independent": True,
+    },
+)
+```
 
 ### Local tests
 

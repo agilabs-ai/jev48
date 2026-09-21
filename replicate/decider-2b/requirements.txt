@@ -1,0 +1,6 @@
+torch==2.7.1
+transformers>=5,<6
+numpy<2
+huggingface_hub>=0.34,<2
+flash-linear-attention
+git+https://github.com/Mapika/decider.git@c4daaac28af9fea95d627015cffa2dd5a5926ee6
